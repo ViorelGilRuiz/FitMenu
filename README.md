@@ -1,8 +1,8 @@
-# FitMenu AI Studio
+﻿# FitMenu AI Studio
 
 <p align="center">
   <strong>AI Nutrition Platform for Fitness & Wellness</strong><br/>
-  Menus semanales inteligentes, recetas paso a paso y experiencia premium para entornos B2B.
+  Menus semanales inteligentes, recetas paso a paso y experiencia visual premium para entornos B2B.
 </p>
 
 <p align="center">
@@ -10,131 +10,100 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Status-In%20Development-1f6feb" alt="status"/>
+  <img src="https://img.shields.io/badge/Status-MVP%20Avanzado-1f6feb" alt="status"/>
+  <img src="https://img.shields.io/badge/Auth-Backend%20Token-0f9d58" alt="auth"/>
   <img src="https://img.shields.io/badge/Backend-FastAPI-009688" alt="backend"/>
   <img src="https://img.shields.io/badge/Frontend-Vanilla%20JS-ffb300" alt="frontend"/>
   <img src="https://img.shields.io/badge/Go--To--Market-B2B-7b1fa2" alt="b2b"/>
 </p>
 
-## :rocket: Propuesta del proyecto
-**FitMenu AI Studio** es una plataforma de nutricion inteligente para rendimiento deportivo y bienestar.
+## :star2: Documento principal para empresas
+Si una persona no técnica quiere entender el proyecto desde cero:
 
-Su objetivo es evolucionar desde un **MVP funcional** a un **SaaS B2B escalable** para:
-- gimnasios y cadenas fitness,
-- programas corporativos de bienestar,
-- coaches y centros de nutricion,
-- integraciones white-label con apps de salud.
+- **📘 Guía de usuario para empresas (no técnica):** `docs/guia-usuario-empresas.md`
 
-## :briefcase: Valor comercial para empresas
-- Personalizacion nutricional a escala.
-- Mejor adherencia del usuario final.
-- Menor friccion operativa para equipos de nutricion.
-- Base tecnica lista para escalar y productizar.
+Incluye explicación visual, base de datos simplificada, estado actual, propuesta de valor y roadmap.
 
-## :sparkles: Novedades implementadas (ultima version)
-- Login completo con backend: `Iniciar sesion / Registrarse` + token Bearer.
-- Persistencia real de usuarios en servidor (`backend/data/users.json` para entorno demo).
-- Onboarding ampliado con variables de estilo de vida.
-- Volcado de datos de cuenta al formulario y autocompletado de perfil guardado desde API.
-- Bloque `Consejo IA` al generar menu con resumen personalizado de recomendaciones.
-- Perfil nutricional mas rico y personalizado.
-- Motor de recomendacion adaptado por nivel de cocina.
-- Catalogo ampliado de recetas (`r1` a `r22`).
-- Filtro por dificultad en vista `Cartas 3D` segun nivel del usuario.
-- Tarjetas 3D mejoradas con rotacion y carrusel de imagenes en hover.
+## :rocket: Qué es FitMenu AI
+**FitMenu AI Studio** es una plataforma de nutrición inteligente que convierte datos de perfil en:
+- menú semanal personalizado,
+- recetas paso a paso,
+- lista de compra,
+- recomendaciones IA comprensibles,
+- experiencia visual moderna (tarjetas 3D + interacción).
 
-## :brain: Variables que ahora influyen en el menu
-Ademas de edad/peso/altura/objetivo/dieta/restricciones, ahora se usan:
-- `cook_level`: `basic`, `intermediate`, `advanced`
-- `activity_level`: `low`, `moderate`, `high`
-- `training_days`: 0-7
-- `max_prep_minutes`: tiempo maximo por receta
-- `preferred_cost`: `low`, `mid`, `high`, `any`
-- `dislikes`: ingredientes no deseados
+## :briefcase: Valor para negocio
+- Personalización a escala para empresas de salud/fitness.
+- Mayor adherencia del usuario final.
+- Menor fricción operativa para equipos de nutrición.
+- Base sólida para SaaS B2B y white-label.
 
-Resultado: los menus son mas realistas para el contexto de cada persona.
+## :sparkles: Estado actual (implementado)
+- ✅ Registro e inicio de sesión completo con backend.
+- ✅ Autenticación con token Bearer y expiración.
+- ✅ Guardado de cuenta y perfil en servidor (entorno demo).
+- ✅ Formulario avanzado con autocompletado de perfil.
+- ✅ Consejo IA tras completar formulario.
+- ✅ Motor de recomendación nutricional por objetivo/restricciones/nivel.
+- ✅ Catálogo ampliado de recetas (`r1` a `r22`).
+- ✅ Vista de recetas con tarjetas 3D y carrusel de imagen en hover.
 
-## :salad: Logica por nivel de usuario
-- **Bajo (`basic`)**: recetas `easy`.
-- **Intermedio (`intermediate`)**: recetas `easy` + `medium`.
-- **Avanzado (`advanced`)**: recetas `easy` + `medium` + `hard`.
+## :brain: Personalización real
+El motor tiene en cuenta:
+- objetivo (`lose_fat`, `maintain`, `gain_muscle`),
+- dieta (`omnivore`, `vegetarian`, `vegan`),
+- alergias y `dislikes`,
+- nivel culinario (`basic`, `intermediate`, `advanced`),
+- actividad semanal, días de entrenamiento,
+- tiempo máximo de preparación,
+- preferencia de coste.
 
-Esto aplica tanto al motor semanal como a la pagina de cartas.
-
-## :compass: Flujo de la aplicacion
-1. `login.html` (registro o acceso de usuario existente)
-2. `form.html` (autocompleta perfil si ya estaba guardado)
-3. `recipes.html`
-4. `recipe.html`
-
-## :building_construction: Arquitectura tecnica
-```text
-Frontend (HTML/CSS/JS multipagina)
-        |
-        v
-Backend API (FastAPI + motor de reglas nutricionales)
-        |
-        v
-Data Model SQL (schema listo para PostgreSQL)
-```
-
-## :toolbox: Stack
-- **Frontend:** HTML5, CSS3, JavaScript (Vanilla).
-- **Backend:** Python, FastAPI, Pydantic.
-- **DB (schema):** PostgreSQL-ready en `db/schema.sql`.
-- **Documentacion API:** Swagger/OpenAPI.
+## :compass: Flujo de uso
+1. `login.html` → registro o acceso de usuario existente.
+2. `form.html` → perfil nutricional + consejo IA + generación del menú.
+3. `recipes.html` → exploración visual de recetas en cartas 3D.
+4. `recipe.html` → receta completa paso a paso.
 
 ## :electric_plug: Endpoints principales
-| Metodo | Endpoint | Uso |
+| Método | Endpoint | Descripción |
 |---|---|---|
 | `POST` | `/auth/register` | Registro de usuario |
-| `POST` | `/auth/login` | Login y entrega de token |
-| `GET` | `/auth/me` | Perfil del usuario autenticado |
+| `POST` | `/auth/login` | Login + entrega de token |
+| `GET` | `/auth/me` | Perfil autenticado |
 | `PUT` | `/auth/me/account` | Actualizar preferencias de cuenta |
 | `PUT` | `/auth/me/profile` | Guardar perfil nutricional |
-| `GET` | `/health` | Estado de servicio |
-| `POST` | `/menus/weekly` | Menu semanal resumido |
-| `POST` | `/menus/weekly/full` | Menu completo + KPIs + lista de compra |
-| `GET` | `/recipes` | Catalogo de recetas |
+| `POST` | `/menus/weekly` | Menú semanal resumido |
+| `POST` | `/menus/weekly/full` | Menú completo + KPIs + lista de compra |
+| `GET` | `/recipes` | Catálogo de recetas |
 | `GET` | `/recipes/{recipe_id}` | Detalle de receta |
+| `GET` | `/health` | Estado del servicio |
 
-## :card_file_box: Modelo de datos (SQL)
-Entidades principales:
-- `users`
-- `user_profiles`
-- `recipes`
-- `weekly_menus`
-
-Campos nuevos relevantes en `user_profiles`:
-- `dislikes`
-- `cook_level`
-- `activity_level`
-- `training_days`
-- `max_prep_minutes`
-- `preferred_cost`
-
-Referencia: `db/schema.sql`
-
-## :lock: Seguridad y autenticacion (estado actual)
-- Passwords hasheadas en backend con `PBKDF2-HMAC-SHA256`.
-- Sesion mediante token firmado (Bearer) con expiracion.
-- Carga de usuario autenticado y persistencia de cuenta/perfil desde API.
-- Nota: para produccion se recomienda migrar a JWT estandar + base de datos real.
-
-## :open_file_folder: Estructura del repositorio
+## :building_construction: Arquitectura
 ```text
-backend/     # API FastAPI y motor de recomendacion
-frontend/    # app web multipagina + UX visual
-db/          # esquema SQL
-docs/        # brief, arquitectura, roadmap, demo API
+Frontend (HTML/CSS/JS multipágina)
+        |
+        v
+Backend API (FastAPI + motor nutricional + auth token)
+        |
+        v
+Modelo de datos SQL (preparado para PostgreSQL)
 ```
 
-## :art: Branding GitHub profesional
-He dejado una guia accionable para pulir tu perfil y tu presencia comercial en GitHub:
-- `docs/github-profile-pro.md`
-- `docs/github-profile-readme-template.md`
+## :card_file_box: Base de datos y persistencia
+- Diseño de base de datos en `db/schema.sql`.
+- Persistencia de usuarios demo en `backend/data/users.json`.
+- Entidades clave: `users`, `user_profiles`, `recipes`, `weekly_menus`.
 
-## :arrow_forward: Ejecucion local
+## :open_file_folder: Documentación del proyecto
+- `docs/guia-usuario-empresas.md` → guía no técnica para empresas.
+- `docs/product-brief.md` → visión de producto.
+- `docs/architecture.md` → arquitectura técnica.
+- `docs/roadmap.md` → plan de evolución.
+- `docs/api-demo.md` → pruebas rápidas de API.
+- `docs/github-profile-pro.md` → mejora profesional de perfil GitHub.
+- `docs/github-profile-readme-template.md` → plantilla de README de perfil.
+
+## :arrow_forward: Ejecución local
 ### Backend
 ```bash
 cd backend
@@ -144,6 +113,7 @@ python -m venv .venv
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8001
 ```
+
 Swagger:
 - `http://127.0.0.1:8001/docs`
 
@@ -152,30 +122,27 @@ Swagger:
 cd frontend
 python -m http.server 5500
 ```
+
 Abrir:
 - `http://127.0.0.1:5500/login.html`
 
 ## :chart_with_upwards_trend: Roadmap de escalado
 ### Fase 1 (actual)
-- MVP funcional end-to-end.
-- Motor de personalizacion por perfil y nivel.
-- Demo comercial para presentaciones B2B.
+- MVP avanzado funcional.
+- Auth + recomendación + UX visual + documentación empresarial.
 
 ### Fase 2
-- Persistencia real completa en PostgreSQL.
-- Autenticacion robusta (backend + sesiones seguras).
-- Feedback loop para recomendaciones adaptativas.
+- Persistencia productiva en PostgreSQL.
+- Seguridad endurecida y gestión de sesiones avanzada.
+- Métricas y feedback loop de adherencia.
 
 ### Fase 3
 - SaaS B2B multi-tenant.
 - Panel admin para empresas.
-- Analitica de adherencia y rendimiento.
-- Integraciones con wearables y ecosistemas fitness.
+- Integraciones con ecosistemas fitness/wearables.
 
 ## :warning: Nota profesional
-FitMenu AI es una plataforma tecnologica de apoyo nutricional.  
-No reemplaza evaluacion medica o nutricional profesional.
+FitMenu AI es una plataforma tecnológica de apoyo nutricional y no reemplaza asesoramiento médico o nutricional profesional.
 
 ## :bust_in_silhouette: Autor
-**Viorel Gil Ruiz**  
-Proyecto en desarrollo continuo con foco en calidad tecnica, producto y ventas comerciales.
+**Viorel Gil Ruiz**

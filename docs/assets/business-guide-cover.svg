@@ -1,0 +1,43 @@
+<svg width="1280" height="560" viewBox="0 0 1280 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#071325"/>
+      <stop offset="0.55" stop-color="#0B2242"/>
+      <stop offset="1" stop-color="#0C2E4A"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#132D57"/>
+      <stop offset="1" stop-color="#0D1D3A"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2CF7D0"/>
+      <stop offset="1" stop-color="#59A8FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="560" fill="url(#bg)"/>
+  <g opacity="0.2" stroke="#3E6AA6">
+    <path d="M0 70H1280M0 150H1280M0 230H1280M0 310H1280M0 390H1280M0 470H1280"/>
+    <path d="M80 0V560M220 0V560M360 0V560M500 0V560M640 0V560M780 0V560M920 0V560M1060 0V560M1200 0V560"/>
+  </g>
+
+  <rect x="72" y="74" width="730" height="414" rx="22" fill="url(#card)" stroke="#2E568E"/>
+  <text x="118" y="140" fill="#91DAFF" font-size="21" font-family="Segoe UI, Arial, sans-serif" letter-spacing="2">GUIA EJECUTIVA DE PROYECTO</text>
+  <text x="118" y="206" fill="#EAF3FF" font-size="66" font-weight="700" font-family="Segoe UI, Arial, sans-serif">FitMenu AI Studio</text>
+  <text x="118" y="260" fill="#B5C9E4" font-size="30" font-family="Segoe UI, Arial, sans-serif">Inteligencia nutricional aplicada a negocio</text>
+  <text x="118" y="304" fill="#B5C9E4" font-size="30" font-family="Segoe UI, Arial, sans-serif">para fitness, salud y bienestar corporativo</text>
+
+  <rect x="118" y="352" width="290" height="58" rx="14" fill="url(#accent)"/>
+  <text x="174" y="390" fill="#032137" font-size="28" font-weight="700" font-family="Segoe UI, Arial, sans-serif">MVP OPERATIVO</text>
+
+  <rect x="430" y="352" width="328" height="58" rx="14" fill="#11284B" stroke="#2F5B95"/>
+  <text x="466" y="390" fill="#E7F2FF" font-size="26" font-weight="600" font-family="Segoe UI, Arial, sans-serif">ESCALADO B2B EN CURSO</text>
+
+  <rect x="844" y="108" width="360" height="372" rx="22" fill="#101F3C" stroke="#2E568D"/>
+  <text x="878" y="158" fill="#8FD8FF" font-size="22" font-family="Segoe UI, Arial, sans-serif">Puntos clave</text>
+  <text x="878" y="206" fill="#EAF3FF" font-size="28" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Autenticacion real</text>
+  <text x="878" y="240" fill="#B6CCE8" font-size="20" font-family="Segoe UI, Arial, sans-serif">Registro, login, token y perfil</text>
+  <text x="878" y="287" fill="#EAF3FF" font-size="28" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Menu personalizado IA</text>
+  <text x="878" y="321" fill="#B6CCE8" font-size="20" font-family="Segoe UI, Arial, sans-serif">Objetivo, dieta, nivel y restricciones</text>
+  <text x="878" y="368" fill="#EAF3FF" font-size="28" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Experiencia visual premium</text>
+  <text x="878" y="402" fill="#B6CCE8" font-size="20" font-family="Segoe UI, Arial, sans-serif">Tarjetas 3D + animaciones + detalle</text>
+</svg>
