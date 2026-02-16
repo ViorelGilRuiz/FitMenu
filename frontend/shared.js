@@ -1,6 +1,5 @@
 const SESSION_KEY = "fitmenu_session";
 const SELECTED_RECIPE_KEY = "fitmenu_selected_recipe";
-const USERS_KEY = "fitmenu_users";
 const DEFAULT_API_URL = "http://127.0.0.1:8001";
 
 const RECIPE_IMAGE_SETS = {
@@ -141,97 +140,110 @@ function setSession(data) {
   localStorage.setItem(SESSION_KEY, JSON.stringify(data));
 }
 
-function loadUsers() {
-  try {
-    const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
-    return Array.isArray(users) ? users : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveUsers(users) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
 function normalizeEmail(email) {
   return (email || "").trim().toLowerCase();
 }
 
-function findUserByEmail(email) {
-  const normalized = normalizeEmail(email);
-  return loadUsers().find((u) => normalizeEmail(u.email) === normalized) || null;
-}
-
-function registerUser(userData) {
-  const users = loadUsers();
-  const email = normalizeEmail(userData.email);
-  if (!email) return { ok: false, message: "Email invalido." };
-  if (users.some((u) => normalizeEmail(u.email) === email)) {
-    return { ok: false, message: "Ese email ya esta registrado. Inicia sesion." };
-  }
-
-  const now = new Date().toISOString();
-  const record = {
-    id: `u_${Math.random().toString(36).slice(2, 10)}`,
-    email,
-    password: userData.password,
-    name: userData.name,
-    created_at: now,
-    updated_at: now,
-    account: {
-      level: userData.level || "intermediate",
-      activityLevel: userData.activityLevel || "moderate",
-      trainingDays: Number.isFinite(userData.trainingDays) ? userData.trainingDays : 4,
-      maxPrepMinutes: Number.isFinite(userData.maxPrepMinutes) ? userData.maxPrepMinutes : 40,
-      preferredCost: userData.preferredCost || "any",
-    },
-    profile: userData.profile || null,
+function authAccountFromSession(sessionLike = null) {
+  const s = sessionLike || getSession() || {};
+  return {
+    level: s.level || "intermediate",
+    activity_level: s.activityLevel || "moderate",
+    training_days: Number.isFinite(s.trainingDays) ? s.trainingDays : 4,
+    max_prep_minutes: Number.isFinite(s.maxPrepMinutes) ? s.maxPrepMinutes : 40,
+    preferred_cost: s.preferredCost || "any",
   };
-
-  users.push(record);
-  saveUsers(users);
-  return { ok: true, user: record };
 }
 
-function authenticateUser(email, password) {
-  const user = findUserByEmail(email);
-  if (!user || user.password !== password) {
-    return { ok: false, message: "Usuario o contrasena incorrectos." };
-  }
-  return { ok: true, user };
+function mergeSessionWithUser(user, token = null, authMode = null) {
+  const account = user.account || {};
+  setSession({
+    userId: user.id,
+    name: user.name,
+    email: user.email,
+    token: token || getSession()?.token || "",
+    apiUrl: getSession()?.apiUrl || DEFAULT_API_URL,
+    level: account.level || "intermediate",
+    activityLevel: account.activity_level || "moderate",
+    trainingDays: account.training_days ?? 4,
+    maxPrepMinutes: account.max_prep_minutes ?? 40,
+    preferredCost: account.preferred_cost || "any",
+    authMode: authMode || getSession()?.authMode || "login",
+  });
 }
 
-function updateUserAccount(userId, patch) {
-  const users = loadUsers();
-  const idx = users.findIndex((u) => u.id === userId);
-  if (idx < 0) return null;
-  users[idx].account = { ...(users[idx].account || {}), ...patch };
-  users[idx].updated_at = new Date().toISOString();
-  saveUsers(users);
-  return users[idx];
-}
-
-function updateUserProfile(userId, profile) {
-  const users = loadUsers();
-  const idx = users.findIndex((u) => u.id === userId);
-  if (idx < 0) return null;
-  users[idx].profile = profile;
-  users[idx].updated_at = new Date().toISOString();
-  saveUsers(users);
-  return users[idx];
-}
-
-function getCurrentUser() {
+async function apiRequest(path, options = {}, requiresAuth = false) {
   const s = getSession();
-  if (!s?.userId) return null;
-  const users = loadUsers();
-  return users.find((u) => u.id === s.userId) || null;
+  const headers = { ...(options.headers || {}) };
+  if (requiresAuth) {
+    if (!s?.token) throw new Error("Sesion no valida");
+    headers.Authorization = `Bearer ${s.token}`;
+  }
+  const response = await fetch(`${(s?.apiUrl || DEFAULT_API_URL)}${path}`, { ...options, headers });
+  const text = await response.text();
+  let data = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = text;
+  }
+  if (!response.ok) {
+    const detail = data?.detail || data?.message || response.statusText;
+    throw new Error(detail);
+  }
+  return data;
+}
+
+async function registerUser(userData) {
+  const payload = {
+    name: userData.name,
+    email: normalizeEmail(userData.email),
+    password: userData.password,
+    account: authAccountFromSession(userData),
+  };
+  return apiRequest("/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
+async function authenticateUser(email, password, accountPatch = null) {
+  const payload = {
+    email: normalizeEmail(email),
+    password,
+    account: authAccountFromSession(accountPatch || getSession()),
+  };
+  return apiRequest("/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
+async function getCurrentUser() {
+  return apiRequest("/auth/me", { method: "GET" }, true);
+}
+
+async function updateUserAccount(accountPatch) {
+  return apiRequest("/auth/me/account", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(accountPatch),
+  }, true);
+}
+
+async function updateUserProfile(profile) {
+  return apiRequest("/auth/me/profile", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(profile),
+  }, true);
 }
 
 function requireAuth() {
   const s = getSession();
-  if (!s) {
+  if (!s || !s.token) {
     window.location.href = "login.html";
     return null;
   }

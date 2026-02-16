@@ -25,8 +25,13 @@ if (session) {
   welcome.textContent = `${session.name} | Nivel ${levelLabel(session.level)} | Actividad ${activityLabel} | ${session.maxPrepMinutes || 40} min/receta`;
 }
 
-function prefillFromSavedUser() {
-  const user = getCurrentUser();
+async function prefillFromSavedUser() {
+  let user = null;
+  try {
+    user = await getCurrentUser();
+  } catch {
+    user = null;
+  }
   if (!accountSnapshotEl) return;
 
   if (!user) {
@@ -38,7 +43,7 @@ function prefillFromSavedUser() {
   accountSnapshotEl.innerHTML = `
     <strong>${user.name || "Usuario"}</strong><br>
     ${user.email || "-"} | Nivel ${levelLabel(account.level || "intermediate")}<br>
-    Actividad ${account.activityLevel || "moderate"} | ${account.trainingDays ?? 4} dias/semana | ${account.maxPrepMinutes ?? 40} min
+    Actividad ${account.activity_level || "moderate"} | ${account.training_days ?? 4} dias/semana | ${account.max_prep_minutes ?? 40} min
   `;
 
   if (!user.profile) return;
@@ -314,8 +319,12 @@ form.addEventListener("submit", async (event) => {
     statusEl.textContent = "Menu generado correctamente";
     statusEl.style.color = "#7ef5c6";
     pulseNode(statusEl);
-    if (session?.userId) {
-      updateUserProfile(session.userId, profilePayload);
+    if (session?.token) {
+      try {
+        await updateUserProfile(profilePayload);
+      } catch {
+        // non-blocking profile persistence
+      }
     }
   } catch (error) {
     statusEl.textContent = error.message;

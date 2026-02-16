@@ -1,6 +1,14 @@
-﻿from typing import Literal
+﻿from typing import Any, Literal
+import base64
+import hashlib
+import hmac
+import json
+import os
+import secrets
+import time
+from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -103,6 +111,147 @@ class WeeklyMenuFull(BaseModel):
     week: list[DayPlanFull]
     shopping_list: list[ShoppingItem]
     kpis: WeeklyKpis
+
+
+class AccountPrefs(BaseModel):
+    level: Literal["low", "intermediate", "advanced"] = "intermediate"
+    activity_level: Literal["low", "moderate", "high"] = "moderate"
+    training_days: int = Field(default=4, ge=0, le=7)
+    max_prep_minutes: int = Field(default=40, ge=10, le=120)
+    preferred_cost: Literal["low", "mid", "high", "any"] = "any"
+
+
+class RegisterPayload(BaseModel):
+    name: str = Field(..., min_length=2, max_length=80)
+    email: str
+    password: str = Field(..., min_length=8, max_length=128)
+    account: AccountPrefs = Field(default_factory=AccountPrefs)
+
+
+class LoginPayload(BaseModel):
+    email: str
+    password: str = Field(..., min_length=8, max_length=128)
+    account: AccountPrefs | None = None
+
+
+class UserView(BaseModel):
+    id: str
+    name: str
+    email: str
+    account: AccountPrefs
+    profile: UserProfile | None = None
+
+
+class AuthResponse(BaseModel):
+    token: str
+    user: UserView
+
+
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+DATA_FILE = DATA_DIR / "users.json"
+TOKEN_SECRET = os.getenv("FITMENU_TOKEN_SECRET", "fitmenu-dev-secret")
+TOKEN_TTL_SECONDS = int(os.getenv("FITMENU_TOKEN_TTL", str(60 * 60 * 24 * 7)))
+
+
+def ensure_data_file() -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    if not DATA_FILE.exists():
+        DATA_FILE.write_text(json.dumps({"users": []}, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def load_users() -> list[dict[str, Any]]:
+    ensure_data_file()
+    try:
+        raw = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+        users = raw.get("users", [])
+        return users if isinstance(users, list) else []
+    except Exception:
+        return []
+
+
+def save_users(users: list[dict[str, Any]]) -> None:
+    ensure_data_file()
+    DATA_FILE.write_text(json.dumps({"users": users}, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def normalize_email(email: str) -> str:
+    return email.strip().lower()
+
+
+def hash_password(password: str, salt_hex: str | None = None) -> str:
+    salt = bytes.fromhex(salt_hex) if salt_hex else secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 120_000)
+    return f"{salt.hex()}:{digest.hex()}"
+
+
+def verify_password(password: str, stored_hash: str) -> bool:
+    try:
+        salt_hex, digest_hex = stored_hash.split(":", 1)
+    except ValueError:
+        return False
+    calc = hash_password(password, salt_hex).split(":", 1)[1]
+    return hmac.compare_digest(calc, digest_hex)
+
+
+def _b64url(data: bytes) -> str:
+    return base64.urlsafe_b64encode(data).decode("ascii").rstrip("=")
+
+
+def _b64urldecode(data: str) -> bytes:
+    padding = "=" * (-len(data) % 4)
+    return base64.urlsafe_b64decode(data + padding)
+
+
+def create_token(user_id: str) -> str:
+    payload = {"uid": user_id, "exp": int(time.time()) + TOKEN_TTL_SECONDS}
+    payload_b64 = _b64url(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
+    sig = hmac.new(TOKEN_SECRET.encode("utf-8"), payload_b64.encode("utf-8"), hashlib.sha256).digest()
+    return f"{payload_b64}.{_b64url(sig)}"
+
+
+def verify_token(token: str) -> dict[str, Any]:
+    try:
+        payload_b64, sig_b64 = token.split(".", 1)
+    except ValueError as exc:
+        raise HTTPException(status_code=401, detail="Token invalido") from exc
+
+    expected_sig = hmac.new(TOKEN_SECRET.encode("utf-8"), payload_b64.encode("utf-8"), hashlib.sha256).digest()
+    if not hmac.compare_digest(_b64url(expected_sig), sig_b64):
+        raise HTTPException(status_code=401, detail="Firma de token invalida")
+
+    payload = json.loads(_b64urldecode(payload_b64).decode("utf-8"))
+    if payload.get("exp", 0) < int(time.time()):
+        raise HTTPException(status_code=401, detail="Sesion expirada")
+    return payload
+
+
+def user_from_record(record: dict[str, Any]) -> UserView:
+    profile_obj = None
+    if record.get("profile"):
+        try:
+            profile_obj = UserProfile(**record["profile"])
+        except Exception:
+            profile_obj = None
+    return UserView(
+        id=record["id"],
+        name=record["name"],
+        email=record["email"],
+        account=AccountPrefs(**(record.get("account") or {})),
+        profile=profile_obj,
+    )
+
+
+def get_auth_user(authorization: str | None = Header(default=None)) -> dict[str, Any]:
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Falta token Bearer")
+    token = authorization.split(" ", 1)[1].strip()
+    payload = verify_token(token)
+    user_id = payload.get("uid")
+    users = load_users()
+    user = next((u for u in users if u.get("id") == user_id), None)
+    if not user:
+        raise HTTPException(status_code=401, detail="Usuario no encontrado")
+    return user
 
 
 RECIPES: dict[str, Recipe] = {
@@ -1021,6 +1170,86 @@ def build_weekly_menu_full(profile: UserProfile) -> WeeklyMenuFull:
     )
 
 
+@app.post("/auth/register", response_model=AuthResponse)
+def auth_register(payload: RegisterPayload) -> AuthResponse:
+    users = load_users()
+    email = normalize_email(payload.email)
+    if any(normalize_email(u.get("email", "")) == email for u in users):
+        raise HTTPException(status_code=409, detail="Este email ya esta registrado")
+
+    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    record = {
+        "id": f"u_{secrets.token_hex(6)}",
+        "name": payload.name.strip(),
+        "email": email,
+        "password_hash": hash_password(payload.password),
+        "account": payload.account.model_dump(),
+        "profile": None,
+        "created_at": now,
+        "updated_at": now,
+    }
+    users.append(record)
+    save_users(users)
+
+    token = create_token(record["id"])
+    return AuthResponse(token=token, user=user_from_record(record))
+
+
+@app.post("/auth/login", response_model=AuthResponse)
+def auth_login(payload: LoginPayload) -> AuthResponse:
+    users = load_users()
+    email = normalize_email(payload.email)
+    user = next((u for u in users if normalize_email(u.get("email", "")) == email), None)
+    if not user or not verify_password(payload.password, user.get("password_hash", "")):
+        raise HTTPException(status_code=401, detail="Credenciales invalidas")
+
+    if payload.account is not None:
+        user["account"] = payload.account.model_dump()
+        user["updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        save_users(users)
+
+    token = create_token(user["id"])
+    return AuthResponse(token=token, user=user_from_record(user))
+
+
+@app.get("/auth/me", response_model=UserView)
+def auth_me(authorization: str | None = Header(default=None)) -> UserView:
+    user = get_auth_user(authorization)
+    return user_from_record(user)
+
+
+@app.put("/auth/me/account", response_model=UserView)
+def auth_update_account(
+    account: AccountPrefs,
+    authorization: str | None = Header(default=None),
+) -> UserView:
+    current = get_auth_user(authorization)
+    users = load_users()
+    idx = next((i for i, u in enumerate(users) if u.get("id") == current.get("id")), -1)
+    if idx < 0:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    users[idx]["account"] = account.model_dump()
+    users[idx]["updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    save_users(users)
+    return user_from_record(users[idx])
+
+
+@app.put("/auth/me/profile", response_model=UserView)
+def auth_update_profile(
+    profile: UserProfile,
+    authorization: str | None = Header(default=None),
+) -> UserView:
+    current = get_auth_user(authorization)
+    users = load_users()
+    idx = next((i for i, u in enumerate(users) if u.get("id") == current.get("id")), -1)
+    if idx < 0:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    users[idx]["profile"] = profile.model_dump()
+    users[idx]["updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    save_users(users)
+    return user_from_record(users[idx])
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
@@ -1047,3 +1276,6 @@ def get_recipe(recipe_id: str) -> Recipe:
 @app.get("/recipes", response_model=list[Recipe])
 def list_recipes() -> list[Recipe]:
     return list(RECIPES.values())
+
+
+

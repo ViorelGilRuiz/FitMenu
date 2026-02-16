@@ -17,3 +17,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Runtime auth storage
+backend/data/users.json

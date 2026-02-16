@@ -32,10 +32,10 @@ Su objetivo es evolucionar desde un **MVP funcional** a un **SaaS B2B escalable*
 - Base tecnica lista para escalar y productizar.
 
 ## :sparkles: Novedades implementadas (ultima version)
-- Login dual `Iniciar sesion / Registrarse` con persistencia local de usuarios.
-- Deteccion de usuario registrado por email y acceso con credenciales.
+- Login completo con backend: `Iniciar sesion / Registrarse` + token Bearer.
+- Persistencia real de usuarios en servidor (`backend/data/users.json` para entorno demo).
 - Onboarding ampliado con variables de estilo de vida.
-- Volcado de datos de cuenta al formulario y autocompletado de perfil guardado.
+- Volcado de datos de cuenta al formulario y autocompletado de perfil guardado desde API.
 - Bloque `Consejo IA` al generar menu con resumen personalizado de recomendaciones.
 - Perfil nutricional mas rico y personalizado.
 - Motor de recomendacion adaptado por nivel de cocina.
@@ -87,6 +87,11 @@ Data Model SQL (schema listo para PostgreSQL)
 ## :electric_plug: Endpoints principales
 | Metodo | Endpoint | Uso |
 |---|---|---|
+| `POST` | `/auth/register` | Registro de usuario |
+| `POST` | `/auth/login` | Login y entrega de token |
+| `GET` | `/auth/me` | Perfil del usuario autenticado |
+| `PUT` | `/auth/me/account` | Actualizar preferencias de cuenta |
+| `PUT` | `/auth/me/profile` | Guardar perfil nutricional |
 | `GET` | `/health` | Estado de servicio |
 | `POST` | `/menus/weekly` | Menu semanal resumido |
 | `POST` | `/menus/weekly/full` | Menu completo + KPIs + lista de compra |
@@ -109,6 +114,12 @@ Campos nuevos relevantes en `user_profiles`:
 - `preferred_cost`
 
 Referencia: `db/schema.sql`
+
+## :lock: Seguridad y autenticacion (estado actual)
+- Passwords hasheadas en backend con `PBKDF2-HMAC-SHA256`.
+- Sesion mediante token firmado (Bearer) con expiracion.
+- Carga de usuario autenticado y persistencia de cuenta/perfil desde API.
+- Nota: para produccion se recomienda migrar a JWT estandar + base de datos real.
 
 ## :open_file_folder: Estructura del repositorio
 ```text

@@ -28,10 +28,10 @@ It is designed to evolve from a **working MVP** into a **scalable B2B SaaS** for
 - Strong base for productization and commercial growth.
 
 ## :sparkles: Latest updates
-- Dual auth flow: `Sign in / Register` with local user persistence.
-- Existing-user detection by email and credential login.
+- Full backend auth flow: `Sign in / Register` with Bearer token.
+- Real user persistence on server (`backend/data/users.json` in demo mode).
 - Extended onboarding with lifestyle variables.
-- Login data is pushed into the form and stored profile is auto-filled.
+- Login data is pushed into the form and stored profile is auto-filled from API.
 - New `AI Insight` block after form submission with personalized guidance.
 - Richer nutrition profile inputs.
 - Recommendation engine adapted to cooking level.
@@ -72,11 +72,22 @@ SQL Data Model (PostgreSQL-ready schema)
 ## :electric_plug: Main endpoints
 | Method | Endpoint | Purpose |
 |---|---|---|
+| `POST` | `/auth/register` | User registration |
+| `POST` | `/auth/login` | Login and token issuance |
+| `GET` | `/auth/me` | Authenticated user profile |
+| `PUT` | `/auth/me/account` | Update account preferences |
+| `PUT` | `/auth/me/profile` | Save nutrition profile |
 | `GET` | `/health` | Service status |
 | `POST` | `/menus/weekly` | Weekly menu |
 | `POST` | `/menus/weekly/full` | Full menu + KPIs + shopping list |
 | `GET` | `/recipes` | Recipe catalog |
 | `GET` | `/recipes/{recipe_id}` | Recipe details |
+
+## :lock: Security and authentication (current)
+- Password hashing with `PBKDF2-HMAC-SHA256`.
+- Signed Bearer token with expiration.
+- Authenticated account/profile persistence via API.
+- Note: for production, migrate to standard JWT + persistent database.
 
 ## :arrow_forward: Local run
 ### Backend

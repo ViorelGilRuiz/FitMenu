@@ -1,4 +1,4 @@
-const loginForm = document.getElementById("loginForm");
+﻿const loginForm = document.getElementById("loginForm");
 const switchLogin = document.getElementById("switchLogin");
 const switchRegister = document.getElementById("switchRegister");
 const authSubmitBtn = document.getElementById("authSubmitBtn");
@@ -16,6 +16,16 @@ const costInput = document.getElementById("preferredCost");
 
 let mode = "login";
 
+function accountPayload() {
+  return {
+    level: levelInput.value,
+    activityLevel: activityInput.value,
+    trainingDays: Number(trainingInput.value),
+    maxPrepMinutes: Number(prepInput.value),
+    preferredCost: costInput.value,
+  };
+}
+
 function setMode(nextMode) {
   mode = nextMode;
   const isLogin = mode === "login";
@@ -24,42 +34,46 @@ function setMode(nextMode) {
   authSubmitBtn.textContent = isLogin ? "Entrar" : "Crear cuenta";
   nameWrap.style.display = isLogin ? "none" : "grid";
   nameInput.required = !isLogin;
-  authStatus.textContent = isLogin ? "" : "";
+  authStatus.textContent = "";
 }
 
-function hydrateFromUser(user) {
-  if (!user) return;
-  nameInput.value = user.name || "";
-  const account = user.account || {};
-  if (account.level) levelInput.value = account.level;
-  if (account.activityLevel) activityInput.value = account.activityLevel;
-  if (Number.isFinite(account.trainingDays)) trainingInput.value = account.trainingDays;
-  if (Number.isFinite(account.maxPrepMinutes)) prepInput.value = account.maxPrepMinutes;
-  if (account.preferredCost) costInput.value = account.preferredCost;
+function hydrateFromSession() {
+  const s = getSession();
+  if (!s) return;
+  if (s.name) nameInput.value = s.name;
+  if (s.email) emailInput.value = s.email;
+  if (s.level) levelInput.value = s.level;
+  if (s.activityLevel) activityInput.value = s.activityLevel;
+  if (Number.isFinite(s.trainingDays)) trainingInput.value = s.trainingDays;
+  if (Number.isFinite(s.maxPrepMinutes)) prepInput.value = s.maxPrepMinutes;
+  if (s.preferredCost) costInput.value = s.preferredCost;
 }
 
-switchLogin.addEventListener("click", () => setMode("login"));
-switchRegister.addEventListener("click", () => setMode("register"));
+async function handleRegister(payload) {
+  const result = await registerUser({
+    name: payload.name,
+    email: payload.email,
+    password: payload.password,
+    ...accountPayload(),
+  });
 
-emailInput.addEventListener("blur", () => {
-  const user = findUserByEmail(emailInput.value);
-  if (user && mode === "login") {
-    hydrateFromUser(user);
-  }
-});
+  mergeSessionWithUser(result.user, result.token, "register");
+  window.location.href = "form.html";
+}
 
-loginForm.addEventListener("submit", (event) => {
+async function handleLogin(payload) {
+  const result = await authenticateUser(payload.email, payload.password, accountPayload());
+  mergeSessionWithUser(result.user, result.token, "login");
+  window.location.href = "form.html";
+}
+
+loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const payload = {
     name: nameInput.value.trim(),
     email: emailInput.value.trim().toLowerCase(),
     password: passInput.value,
-    level: levelInput.value,
-    activityLevel: activityInput.value,
-    trainingDays: Number(trainingInput.value),
-    maxPrepMinutes: Number(prepInput.value),
-    preferredCost: costInput.value,
   };
 
   if (!payload.email) {
@@ -72,64 +86,26 @@ loginForm.addEventListener("submit", (event) => {
     return;
   }
 
-  if (mode === "register") {
-    if (!payload.name) {
-      authStatus.textContent = "Tu nombre es obligatorio para registrarte.";
-      return;
-    }
-    const created = registerUser(payload);
-    if (!created.ok) {
-      authStatus.textContent = created.message;
-      return;
-    }
-
-    setSession({
-      userId: created.user.id,
-      name: created.user.name,
-      email: created.user.email,
-      apiUrl: DEFAULT_API_URL,
-      level: created.user.account.level,
-      activityLevel: created.user.account.activityLevel,
-      trainingDays: created.user.account.trainingDays,
-      maxPrepMinutes: created.user.account.maxPrepMinutes,
-      preferredCost: created.user.account.preferredCost,
-      authMode: "register",
-    });
-
-    window.location.href = "form.html";
+  if (mode === "register" && !payload.name) {
+    authStatus.textContent = "Tu nombre es obligatorio para registrarte.";
     return;
   }
 
-  const auth = authenticateUser(payload.email, payload.password);
-  if (!auth.ok) {
-    authStatus.textContent = auth.message;
-    return;
+  authStatus.textContent = mode === "register" ? "Creando cuenta..." : "Iniciando sesion...";
+
+  try {
+    if (mode === "register") {
+      await handleRegister(payload);
+      return;
+    }
+    await handleLogin(payload);
+  } catch (error) {
+    authStatus.textContent = error.message || "No se pudo autenticar. Revisa tus datos.";
   }
-
-  const account = auth.user.account || {};
-  updateUserAccount(auth.user.id, {
-    level: payload.level,
-    activityLevel: payload.activityLevel,
-    trainingDays: Number.isFinite(payload.trainingDays) ? payload.trainingDays : account.trainingDays,
-    maxPrepMinutes: Number.isFinite(payload.maxPrepMinutes) ? payload.maxPrepMinutes : account.maxPrepMinutes,
-    preferredCost: payload.preferredCost || account.preferredCost,
-  });
-
-  const refreshed = findUserByEmail(payload.email);
-  setSession({
-    userId: refreshed.id,
-    name: refreshed.name,
-    email: refreshed.email,
-    apiUrl: DEFAULT_API_URL,
-    level: refreshed.account?.level || "intermediate",
-    activityLevel: refreshed.account?.activityLevel || "moderate",
-    trainingDays: refreshed.account?.trainingDays ?? 4,
-    maxPrepMinutes: refreshed.account?.maxPrepMinutes ?? 40,
-    preferredCost: refreshed.account?.preferredCost || "any",
-    authMode: "login",
-  });
-
-  window.location.href = "form.html";
 });
 
+switchLogin.addEventListener("click", () => setMode("login"));
+switchRegister.addEventListener("click", () => setMode("register"));
+
+hydrateFromSession();
 setMode("login");
