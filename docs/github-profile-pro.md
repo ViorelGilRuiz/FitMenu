@@ -24,6 +24,10 @@ Incluye:
 - bloque `How I work` (calidad, arquitectura, velocidad de entrega),
 - contacto (`LinkedIn`, email).
 
+Plantilla lista para pegar:
+- `docs/github-profile-readme-ready.md`
+- Banner visual incluido: `docs/assets/github-profile-banner.svg`
+
 ## 4) Estandar para cada repo que quieras vender
 - `README` con:
   - problema,

@@ -64,6 +64,8 @@ Open:
 - `docs/architecture.md`
 - `docs/roadmap.md`
 - `docs/api-demo.md`
+- `docs/github-profile-pro.md`
+- `docs/github-profile-readme-ready.md`
 
 ## :bust_in_silhouette: Author
 **Viorel Gil Ruiz**
