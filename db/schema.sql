@@ -16,6 +16,12 @@ CREATE TABLE user_profiles (
   lactose_free BOOLEAN NOT NULL DEFAULT FALSE,
   gluten_free BOOLEAN NOT NULL DEFAULT FALSE,
   allergies TEXT[] NOT NULL DEFAULT '{}',
+  dislikes TEXT[] NOT NULL DEFAULT '{}',
+  cook_level TEXT NOT NULL DEFAULT 'intermediate' CHECK (cook_level IN ('basic', 'intermediate', 'advanced')),
+  activity_level TEXT NOT NULL DEFAULT 'moderate' CHECK (activity_level IN ('low', 'moderate', 'high')),
+  training_days INT NOT NULL DEFAULT 3 CHECK (training_days BETWEEN 0 AND 7),
+  max_prep_minutes INT NOT NULL DEFAULT 45 CHECK (max_prep_minutes BETWEEN 10 AND 120),
+  preferred_cost TEXT NOT NULL DEFAULT 'any' CHECK (preferred_cost IN ('low', 'mid', 'high', 'any')),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

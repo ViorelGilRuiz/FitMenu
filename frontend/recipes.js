@@ -4,6 +4,12 @@ bindBack();
 
 const cardsGrid = document.getElementById("cardsGrid");
 
+function allowedDifficulties(level) {
+  if (level === "low") return new Set(["easy"]);
+  if (level === "intermediate") return new Set(["easy", "medium"]);
+  return new Set(["easy", "medium", "hard"]);
+}
+
 function tiltCard(card) {
   card.addEventListener("mousemove", (event) => {
     const b = card.getBoundingClientRect();
@@ -34,14 +40,18 @@ async function loadRecipes() {
     return;
   }
 
+  const allow = allowedDifficulties(session.level);
+  const filtered = recipes.filter((r) => allow.has(r.difficulty || "easy"));
+  const visible = filtered.length ? filtered : recipes;
+
   cardsGrid.innerHTML = "";
-  for (const recipe of recipes) {
+  for (const recipe of visible) {
     const card = document.createElement("article");
     card.className = "recipe-card";
     card.innerHTML = `
       <img src="${recipeImage(recipe.id)}" onerror="this.onerror=null;this.src='${FALLBACK_IMG}'" alt="${recipe.name}" />
       <h3>${recipe.name}</h3>
-      <p>${recipe.calories} kcal | P ${recipe.protein_g}g | ${recipe.prep_minutes || "-"} min</p>
+      <p>${recipe.calories} kcal | P ${recipe.protein_g}g | ${recipe.prep_minutes || "-"} min | ${recipe.difficulty || "easy"}</p>
     `;
 
     card.addEventListener("click", () => {

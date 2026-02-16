@@ -19,11 +19,15 @@ const menuState = {
 };
 
 if (session) {
-  welcome.textContent = `${session.name} | Nivel ${levelLabel(session.level)}`;
+  const activityLabel = session.activityLevel === "high" ? "Alta" : session.activityLevel === "low" ? "Baja" : "Media";
+  welcome.textContent = `${session.name} | Nivel ${levelLabel(session.level)} | Actividad ${activityLabel} | ${session.maxPrepMinutes || 40} min/receta`;
 }
 
 function payload() {
   const allergies = document.getElementById("allergies").value.trim();
+  const dislikes = document.getElementById("dislikes").value.trim();
+  const cookLevel = session.level === "low" ? "basic" : session.level === "advanced" ? "advanced" : "intermediate";
+
   return {
     sex: document.getElementById('sex').value,
     age: Number(document.getElementById("age").value),
@@ -34,7 +38,13 @@ function payload() {
     lactose_free: document.getElementById("lactoseFree").checked,
     gluten_free: document.getElementById("glutenFree").checked,
     allergies: allergies ? allergies.split(",").map((x) => x.trim()).filter(Boolean) : [],
+    dislikes: dislikes ? dislikes.split(",").map((x) => x.trim()).filter(Boolean) : [],
     meals_per_day: Number(document.getElementById("mealsPerDay").value),
+    cook_level: cookLevel,
+    activity_level: session.activityLevel || "moderate",
+    training_days: Number.isFinite(session.trainingDays) ? session.trainingDays : 4,
+    max_prep_minutes: Number.isFinite(session.maxPrepMinutes) ? session.maxPrepMinutes : 40,
+    preferred_cost: session.preferredCost || "any",
   };
 }
 

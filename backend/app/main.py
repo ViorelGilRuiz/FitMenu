@@ -29,7 +29,13 @@ class UserProfile(BaseModel):
     lactose_free: bool = False
     gluten_free: bool = False
     allergies: list[str] = Field(default_factory=list)
+    dislikes: list[str] = Field(default_factory=list)
     meals_per_day: int = Field(default=4, ge=3, le=6)
+    cook_level: Literal["basic", "intermediate", "advanced"] = "intermediate"
+    activity_level: Literal["low", "moderate", "high"] = "moderate"
+    training_days: int = Field(default=3, ge=0, le=7)
+    max_prep_minutes: int = Field(default=45, ge=10, le=120)
+    preferred_cost: Literal["low", "mid", "high", "any"] = "any"
 
 
 class RecipeStep(BaseModel):
@@ -327,6 +333,121 @@ RECIPES: dict[str, Recipe] = {
             RecipeStep(step=3, text="Cubre con agua y cocina 20 minutos."),
         ],
     ),
+    "r11": Recipe(
+        id="r11",
+        name="Wrap integral de pavo y hummus",
+        calories=470,
+        protein_g=35,
+        carbs_g=45,
+        fat_g=15,
+        prep_minutes=18,
+        difficulty="easy",
+        cost_level="mid",
+        ingredients=[
+            "1 tortilla integral grande",
+            "120 g pavo cocido",
+            "2 cdas hummus",
+            "lechuga tomate y pepino",
+            "1 cdita aceite de oliva",
+        ],
+        steps=[
+            RecipeStep(step=1, text="Unta hummus sobre la tortilla integral."),
+            RecipeStep(step=2, text="Anade pavo y vegetales en tiras."),
+            RecipeStep(step=3, text="Enrolla, corta y sirve."),
+        ],
+    ),
+    "r12": Recipe(
+        id="r12",
+        name="Pasta integral con atun y verduras",
+        calories=620,
+        protein_g=39,
+        carbs_g=74,
+        fat_g=17,
+        prep_minutes=32,
+        difficulty="medium",
+        cost_level="mid",
+        ingredients=[
+            "90 g pasta integral en crudo",
+            "1 lata atun al natural",
+            "tomate cherry y calabacin",
+            "ajo y oregano",
+            "1 cda aceite de oliva",
+        ],
+        steps=[
+            RecipeStep(step=1, text="Cuece la pasta y reserva."),
+            RecipeStep(step=2, text="Saltea verduras con ajo y oregano."),
+            RecipeStep(step=3, text="Mezcla pasta, atun escurrido y verduras."),
+        ],
+    ),
+    "r13": Recipe(
+        id="r13",
+        name="Curry de garbanzos y espinaca",
+        calories=540,
+        protein_g=23,
+        carbs_g=63,
+        fat_g=20,
+        prep_minutes=34,
+        difficulty="medium",
+        cost_level="low",
+        ingredients=[
+            "150 g garbanzos cocidos",
+            "150 ml leche de coco ligera",
+            "espinaca fresca",
+            "curry y jengibre",
+            "arroz basmati cocido",
+        ],
+        steps=[
+            RecipeStep(step=1, text="Sofrie especias y jengibre 1 minuto."),
+            RecipeStep(step=2, text="Anade garbanzos y leche de coco."),
+            RecipeStep(step=3, text="Incorpora espinaca, cocina y sirve con arroz."),
+        ],
+    ),
+    "r14": Recipe(
+        id="r14",
+        name="Lasaña ligera de calabacin y pavo",
+        calories=590,
+        protein_g=44,
+        carbs_g=41,
+        fat_g=24,
+        prep_minutes=52,
+        difficulty="hard",
+        cost_level="high",
+        ingredients=[
+            "laminas de calabacin",
+            "220 g pavo picado",
+            "salsa de tomate natural",
+            "ricotta light o tofu sedoso",
+            "especias italianas",
+        ],
+        steps=[
+            RecipeStep(step=1, text="Dora el pavo con especias y salsa."),
+            RecipeStep(step=2, text="Monta capas de calabacin y relleno."),
+            RecipeStep(step=3, text="Hornea 25 minutos hasta dorar."),
+        ],
+    ),
+    "r15": Recipe(
+        id="r15",
+        name="Poke bowl de salmon y edamame",
+        calories=650,
+        protein_g=41,
+        carbs_g=68,
+        fat_g=23,
+        prep_minutes=44,
+        difficulty="hard",
+        cost_level="high",
+        ingredients=[
+            "160 g salmon",
+            "80 g arroz sushi en crudo",
+            "edamame pepino y zanahoria",
+            "soja baja en sal y sesamo",
+            "aguacate",
+        ],
+        steps=[
+            RecipeStep(step=1, text="Cuece arroz y enfria ligeramente."),
+            RecipeStep(step=2, text="Corta salmon y verduras."),
+            RecipeStep(step=3, text="Monta bowl y termina con salsa y sesamo."),
+        ],
+    ),
 }
 
 
@@ -401,6 +522,41 @@ RECIPE_META: dict[str, dict[str, object]] = {
         "gluten_free": True,
         "allergens": set(),
     },
+    "r11": {
+        "diets": {"omnivore"},
+        "meal_types": {"lunch", "dinner"},
+        "lactose_free": True,
+        "gluten_free": False,
+        "allergens": {"sesame"},
+    },
+    "r12": {
+        "diets": {"omnivore"},
+        "meal_types": {"lunch", "dinner"},
+        "lactose_free": True,
+        "gluten_free": False,
+        "allergens": {"fish", "gluten"},
+    },
+    "r13": {
+        "diets": {"omnivore", "vegetarian", "vegan"},
+        "meal_types": {"lunch", "dinner"},
+        "lactose_free": True,
+        "gluten_free": True,
+        "allergens": set(),
+    },
+    "r14": {
+        "diets": {"omnivore", "vegetarian"},
+        "meal_types": {"lunch", "dinner"},
+        "lactose_free": False,
+        "gluten_free": True,
+        "allergens": {"milk"},
+    },
+    "r15": {
+        "diets": {"omnivore"},
+        "meal_types": {"lunch", "dinner"},
+        "lactose_free": True,
+        "gluten_free": True,
+        "allergens": {"fish", "soy"},
+    },
 }
 
 
@@ -415,9 +571,26 @@ DAYS = [
 ]
 
 
+def allowed_difficulties(cook_level: str) -> set[str]:
+    if cook_level == "basic":
+        return {"easy"}
+    if cook_level == "intermediate":
+        return {"easy", "medium"}
+    return {"easy", "medium", "hard"}
+
+
+def contains_disliked_ingredient(recipe: Recipe, dislikes: set[str]) -> bool:
+    if not dislikes:
+        return False
+    ingredients_text = " ".join(recipe.ingredients).lower()
+    return any(token in ingredients_text for token in dislikes)
+
+
 def estimate_calories(profile: UserProfile) -> int:
-    bmr = (10 * profile.weight_kg) + (6.25 * profile.height_cm) - (5 * profile.age) + 5
-    maintenance = bmr * 1.45
+    sex_adjust = -161 if profile.sex == "female" else 5
+    bmr = (10 * profile.weight_kg) + (6.25 * profile.height_cm) - (5 * profile.age) + sex_adjust
+    activity_factor = {"low": 1.35, "moderate": 1.5, "high": 1.67}[profile.activity_level]
+    maintenance = (bmr * activity_factor) + (profile.training_days * 25)
     if profile.goal == "lose_fat":
         maintenance -= 350
     elif profile.goal == "gain_muscle":
@@ -440,9 +613,13 @@ def compatible_recipe_ids(profile: UserProfile) -> list[str]:
         if value:
             allergies.add(allergy_aliases.get(value, value))
 
+    dislikes = {item.strip().lower() for item in profile.dislikes if item.strip()}
+    allowed = allowed_difficulties(profile.cook_level)
+
     compatible: list[str] = []
     for recipe_id in RECIPES:
         meta = RECIPE_META[recipe_id]
+        recipe = RECIPES[recipe_id]
         if profile.diet not in meta["diets"]:
             continue
         if profile.lactose_free and not meta["lactose_free"]:
@@ -451,12 +628,36 @@ def compatible_recipe_ids(profile: UserProfile) -> list[str]:
             continue
         if allergies & meta["allergens"]:
             continue
+        if recipe.difficulty not in allowed:
+            continue
+        if contains_disliked_ingredient(recipe, dislikes):
+            continue
+        if recipe.prep_minutes > profile.max_prep_minutes:
+            continue
         compatible.append(recipe_id)
+
+    if not compatible:
+        for recipe_id in RECIPES:
+            meta = RECIPE_META[recipe_id]
+            recipe = RECIPES[recipe_id]
+            if profile.diet not in meta["diets"]:
+                continue
+            if profile.lactose_free and not meta["lactose_free"]:
+                continue
+            if profile.gluten_free and not meta["gluten_free"]:
+                continue
+            if allergies & meta["allergens"]:
+                continue
+            if recipe.difficulty not in allowed:
+                continue
+            if contains_disliked_ingredient(recipe, dislikes):
+                continue
+            compatible.append(recipe_id)
 
     if not compatible:
         raise HTTPException(
             status_code=422,
-            detail="No hay recetas compatibles con la dieta/restricciones actuales.",
+            detail="No hay recetas compatibles con el perfil actual. Prueba subir tiempo de cocina o ajustar restricciones.",
         )
 
     return compatible
@@ -467,15 +668,31 @@ def meal_slots_for_profile(profile: UserProfile) -> list[str]:
     return slots[: profile.meals_per_day]
 
 
-def recipe_score(recipe: Recipe, goal: str) -> float:
+def recipe_score(recipe: Recipe, profile: UserProfile) -> float:
     protein_density = (recipe.protein_g / recipe.calories) * 100 if recipe.calories else 0
     calories_factor = recipe.calories / 100
 
-    if goal == "gain_muscle":
-        return (protein_density * 2.2) + (calories_factor * 0.9)
-    if goal == "lose_fat":
-        return (protein_density * 2.4) - (calories_factor * 0.55)
-    return (protein_density * 2.0) + (calories_factor * 0.2)
+    if profile.goal == "gain_muscle":
+        base = (protein_density * 2.2) + (calories_factor * 0.9)
+    elif profile.goal == "lose_fat":
+        base = (protein_density * 2.4) - (calories_factor * 0.55)
+    else:
+        base = (protein_density * 2.0) + (calories_factor * 0.2)
+
+    if recipe.prep_minutes <= profile.max_prep_minutes:
+        base += 0.35
+
+    if profile.preferred_cost != "any":
+        base += 0.3 if recipe.cost_level == profile.preferred_cost else -0.08
+
+    difficulty_pref = {
+        "basic": {"easy": 0.35, "medium": -0.25, "hard": -0.6},
+        "intermediate": {"easy": 0.15, "medium": 0.25, "hard": -0.2},
+        "advanced": {"easy": 0.0, "medium": 0.18, "hard": 0.34},
+    }
+    base += difficulty_pref[profile.cook_level].get(recipe.difficulty, 0)
+
+    return base
 
 
 def pick_recipe_for_slot(
@@ -493,7 +710,7 @@ def pick_recipe_for_slot(
 
     ranked = sorted(
         slot_candidates,
-        key=lambda rid: (recipe_score(RECIPES[rid], profile.goal), rid),
+        key=lambda rid: (recipe_score(RECIPES[rid], profile), rid),
         reverse=True,
     )
 
@@ -522,8 +739,12 @@ def build_weekly_menu(profile: UserProfile) -> WeeklyMenu:
 
     summary = (
         f"goal={profile.goal}, diet={profile.diet}, meals_per_day={profile.meals_per_day}, "
+        f"cook_level={profile.cook_level}, activity_level={profile.activity_level}, "
+        f"training_days={profile.training_days}, max_prep_minutes={profile.max_prep_minutes}, "
+        f"preferred_cost={profile.preferred_cost}, "
         f"lactose_free={profile.lactose_free}, gluten_free={profile.gluten_free}, "
-        f"allergies={','.join(profile.allergies) if profile.allergies else 'none'}"
+        f"allergies={','.join(profile.allergies) if profile.allergies else 'none'}, "
+        f"dislikes={','.join(profile.dislikes) if profile.dislikes else 'none'}"
     )
 
     return WeeklyMenu(profile_summary=summary, target_calories=calories, week=week)

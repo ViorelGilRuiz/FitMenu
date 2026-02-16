@@ -13,6 +13,11 @@ const RECIPE_IMAGES = {
   r8: "https://images.pexels.com/photos/775032/pexels-photo-775032.jpeg?auto=compress&cs=tinysrgb&w=1600",
   r9: "https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=1600",
   r10: "https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  r11: "https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  r12: "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  r13: "https://images.pexels.com/photos/64208/pexels-photo-64208.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  r14: "https://images.pexels.com/photos/1435907/pexels-photo-1435907.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  r15: "https://images.pexels.com/photos/868110/pexels-photo-868110.jpeg?auto=compress&cs=tinysrgb&w=1600",
 };
 
 const FALLBACK_IMG = "https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1600";
@@ -23,8 +28,12 @@ function getSession() {
     if (!session) return null;
     if (!session.apiUrl) {
       session.apiUrl = DEFAULT_API_URL;
-      setSession(session);
     }
+    if (!session.activityLevel) session.activityLevel = "moderate";
+    if (!Number.isFinite(session.trainingDays)) session.trainingDays = 4;
+    if (!Number.isFinite(session.maxPrepMinutes)) session.maxPrepMinutes = 40;
+    if (!session.preferredCost) session.preferredCost = "any";
+    setSession(session);
     return session;
   } catch {
     return null;

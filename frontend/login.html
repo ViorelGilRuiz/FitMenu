@@ -17,11 +17,34 @@
       <p class="subtitle">Accede para crear menus personalizados con IA</p>
       <form id="loginForm" class="stack">
         <label>Nombre<input id="name" required placeholder="Tu nombre" /></label>
+        <label>Email<input id="email" type="email" required placeholder="tu@email.com" /></label>
+        <label>Contrasena<input id="password" type="password" required minlength="8" placeholder="Minimo 8 caracteres" /></label>
         <label>Nivel
           <select id="level">
             <option value="low">Bajo</option>
             <option value="intermediate" selected>Intermedio</option>
             <option value="advanced">Avanzado</option>
+          </select>
+        </label>
+        <label>Actividad semanal
+          <select id="activityLevel">
+            <option value="low">Baja</option>
+            <option value="moderate" selected>Media</option>
+            <option value="high">Alta</option>
+          </select>
+        </label>
+        <label>Dias de entrenamiento por semana
+          <input id="trainingDays" type="number" min="0" max="7" value="4" />
+        </label>
+        <label>Tiempo maximo por receta (min)
+          <input id="maxPrepMinutes" type="number" min="10" max="120" value="40" />
+        </label>
+        <label>Presupuesto por receta
+          <select id="preferredCost">
+            <option value="any" selected>Indiferente</option>
+            <option value="low">Bajo</option>
+            <option value="mid">Medio</option>
+            <option value="high">Alto</option>
           </select>
         </label>
         <button class="primary" type="submit">Entrar</button>
