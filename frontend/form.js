@@ -12,6 +12,7 @@ const dayDotsEl = document.getElementById("dayDots");
 const prevDayBtn = document.getElementById("prevDayBtn");
 const nextDayBtn = document.getElementById("nextDayBtn");
 const recipeDetailEl = document.getElementById("recipeDetail");
+const aiInsightEl = document.getElementById("aiInsight");
 
 const menuState = {
   week: [],
@@ -102,6 +103,63 @@ function showSummary(menu) {
   summaryEl.textContent = "Menu generado para tu perfil.";
 }
 
+function pulseNode(node) {
+  if (!node) return;
+  node.classList.remove("pulse-on-action");
+  void node.offsetWidth;
+  node.classList.add("pulse-on-action");
+}
+
+function buildAiInsight(profile, menu) {
+  const goalMap = {
+    lose_fat: "definir y perder grasa",
+    maintain: "mantener tu composicion corporal",
+    gain_muscle: "ganar masa muscular",
+  };
+  const dietMap = {
+    omnivore: "omnivoro",
+    vegetarian: "vegetariano",
+    vegan: "vegano",
+  };
+  const activityMap = {
+    low: "actividad baja",
+    moderate: "actividad moderada",
+    high: "actividad alta",
+  };
+
+  const goalText = goalMap[profile.goal] || "mejorar tu nutricion";
+  const dietText = dietMap[profile.diet] || "personalizado";
+  const actText = activityMap[profile.activity_level] || "actividad moderada";
+  const cookLevel = session.level === "low" ? "recetas faciles y directas" : session.level === "advanced" ? "recetas avanzadas con mayor variedad tecnica" : "recetas de dificultad media";
+
+  const tips = [];
+  if (profile.meals_per_day >= 5) tips.push("Tu distribucion de comidas es alta: prioriza preparaciones simples y batch cooking.");
+  if (profile.training_days >= 5) tips.push("Entrenas muchos dias: manten una comida post-entreno con buena proteina y carbohidrato.");
+  if (profile.max_prep_minutes <= 25) tips.push("Tiempo ajustado: enfocate en recetas de 1 sarten o preparaciones en bloque.");
+  if (profile.goal === "gain_muscle") tips.push("Para ganar musculo, prioriza consistencia calorica y proteina diaria.");
+  if (profile.goal === "lose_fat") tips.push("Para perder grasa, mantendremos saciedad alta con fibra y proteina.");
+  if (profile.dislikes?.length) tips.push(`Hemos evitado ingredientes que no te gustan: ${profile.dislikes.join(", ")}.`);
+
+  return `
+    <h3>Consejo IA para ${session.name}</h3>
+    <p>
+      Perfil detectado: ${actText}, objetivo de <strong>${goalText}</strong>, dieta <strong>${dietText}</strong> y preferencia por ${cookLevel}.
+      Tu objetivo calorico estimado es <strong>${menu.target_calories} kcal/dia</strong>.
+    </p>
+    <ul>
+      ${tips.slice(0, 4).map((tip) => `<li>${tip}</li>`).join("")}
+    </ul>
+    <p class="muted">Siguiente paso recomendado: revisa el dia actual, valida recetas y ajusta restricciones antes de regenerar.</p>
+  `;
+}
+
+function showAiInsight(profile, menu) {
+  if (!aiInsightEl) return;
+  aiInsightEl.classList.remove("hidden");
+  aiInsightEl.innerHTML = buildAiInsight(profile, menu);
+  pulseNode(aiInsightEl);
+}
+
 function renderDetail(recipe) {
   if (!recipe) return;
   localStorage.setItem(SELECTED_RECIPE_KEY, recipe.id);
@@ -156,6 +214,7 @@ function renderCurrentDay(animated = false) {
 
   menuEl.classList.toggle("switching", animated);
   setTimeout(() => menuEl.classList.remove("switching"), 220);
+  pulseNode(menuEl);
 
   const card = document.createElement("div");
   card.className = "day-card day-card-large";
@@ -203,6 +262,7 @@ function renderMenu(menu) {
   showSummary(menu);
   menuState.week = menu.week;
   menuState.currentDayIndex = 0;
+  showAiInsight(payload(), menu);
   renderCurrentDay(false);
 }
 
@@ -220,9 +280,11 @@ form.addEventListener("submit", async (event) => {
     localStorage.setItem("fitmenu_last_week", JSON.stringify(result.data));
     statusEl.textContent = "Menu generado correctamente";
     statusEl.style.color = "#7ef5c6";
+    pulseNode(statusEl);
   } catch (error) {
     statusEl.textContent = error.message;
     statusEl.style.color = "#ff9ab8";
+    pulseNode(statusEl);
   }
 });
 

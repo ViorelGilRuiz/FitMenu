@@ -22,6 +22,37 @@ function tiltCard(card) {
   });
 }
 
+function attachHoverImageRotation(card, imgEl, recipeId) {
+  const images = recipeImages(recipeId);
+  if (!images || images.length < 2) return;
+
+  let index = 0;
+  let timer = null;
+
+  const stop = () => {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+    index = 0;
+    imgEl.src = images[index];
+  };
+
+  card.addEventListener("mouseenter", () => {
+    if (timer) return;
+    timer = setInterval(() => {
+      index = (index + 1) % images.length;
+      imgEl.style.opacity = "0.72";
+      setTimeout(() => {
+        imgEl.src = images[index];
+        imgEl.style.opacity = "1";
+      }, 90);
+    }, 620);
+  });
+
+  card.addEventListener("mouseleave", stop);
+}
+
 async function loadRecipes() {
   const session = getSession();
   let recipes = [];
@@ -59,6 +90,8 @@ async function loadRecipes() {
       window.location.href = `recipe.html?id=${recipe.id}`;
     });
 
+    const imgEl = card.querySelector("img");
+    attachHoverImageRotation(card, imgEl, recipe.id);
     tiltCard(card);
     cardsGrid.appendChild(card);
   }

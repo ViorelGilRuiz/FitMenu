@@ -251,6 +251,29 @@ input:focus, select:focus {
   line-height: 1.35;
 }
 
+.ai-insight {
+  border: 1px solid rgba(102, 214, 255, 0.42);
+  background: linear-gradient(135deg, rgba(13, 55, 99, 0.58), rgba(18, 35, 70, 0.52));
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 8px;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.ai-insight h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: #96e7ff;
+}
+
+.ai-insight ul {
+  margin: 6px 0;
+  padding-left: 18px;
+}
+
+.hidden { display: none; }
+
 .panel-menu {
   grid-template-rows: auto auto auto auto auto;
 }
@@ -333,6 +356,14 @@ input:focus, select:focus {
   border-radius: 12px;
   border: 1px solid rgba(152, 189, 255, 0.38);
   background: linear-gradient(120deg, rgba(26, 36, 62, 0.86), rgba(17, 25, 46, 0.84));
+  transform-style: preserve-3d;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.meal-card-btn:hover {
+  transform: perspective(900px) rotateX(4deg) rotateY(-5deg) translateY(-2px);
+  border-color: rgba(63, 232, 199, 0.78);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
 }
 
 .meal-thumb {
@@ -405,6 +436,14 @@ input:focus, select:focus {
   border: 1px solid rgba(118, 169, 255, 0.25);
   border-radius: 12px;
   padding: 10px;
+  transform-style: preserve-3d;
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.panel-detail #recipeDetail:hover {
+  transform: perspective(950px) rotateX(2deg) rotateY(-2deg);
+  border-color: rgba(88, 214, 255, 0.45);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.32);
 }
 
 .panel-detail #recipeDetail h3 {
@@ -440,13 +479,15 @@ input:focus, select:focus {
   border: 1px solid rgba(156, 190, 255, 0.3);
   background: rgba(11, 22, 48, 0.82);
   transform-style: preserve-3d;
-  transition: transform 170ms ease, border-color 170ms ease;
+  transition: transform 170ms ease, border-color 170ms ease, box-shadow 170ms ease;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .recipe-card:hover {
-  transform: translateY(-3px) rotateX(2deg) rotateY(-2deg);
+  transform: perspective(1000px) translateY(-4px) rotateX(3deg) rotateY(-3deg);
   border-color: rgba(47, 240, 186, 0.82);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.34);
 }
 
 .recipe-card img {
@@ -455,6 +496,11 @@ input:focus, select:focus {
   object-fit: cover;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: transform 400ms ease, opacity 300ms ease;
+}
+
+.recipe-card:hover img {
+  transform: scale(1.06);
 }
 
 .recipe-card h3 { margin: 8px 0 4px; font-size: 1rem; }
@@ -473,6 +519,16 @@ input:focus, select:focus {
 @keyframes daySwitch {
   from { opacity: 0.55; transform: translateX(12px); }
   to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 rgba(85, 203, 255, 0); }
+  50% { box-shadow: 0 0 24px rgba(85, 203, 255, 0.42); }
+  100% { box-shadow: 0 0 0 rgba(85, 203, 255, 0); }
+}
+
+.pulse-on-action {
+  animation: pulseGlow 620ms ease;
 }
 
 @media (max-width: 1180px) {
