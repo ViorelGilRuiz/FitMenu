@@ -13,6 +13,7 @@ const prevDayBtn = document.getElementById("prevDayBtn");
 const nextDayBtn = document.getElementById("nextDayBtn");
 const recipeDetailEl = document.getElementById("recipeDetail");
 const aiInsightEl = document.getElementById("aiInsight");
+const accountSnapshotEl = document.getElementById("accountSnapshot");
 
 const menuState = {
   week: [],
@@ -22,6 +23,37 @@ const menuState = {
 if (session) {
   const activityLabel = session.activityLevel === "high" ? "Alta" : session.activityLevel === "low" ? "Baja" : "Media";
   welcome.textContent = `${session.name} | Nivel ${levelLabel(session.level)} | Actividad ${activityLabel} | ${session.maxPrepMinutes || 40} min/receta`;
+}
+
+function prefillFromSavedUser() {
+  const user = getCurrentUser();
+  if (!accountSnapshotEl) return;
+
+  if (!user) {
+    accountSnapshotEl.textContent = "No hay perfil persistido de usuario. Completa el formulario para guardarlo.";
+    return;
+  }
+
+  const account = user.account || {};
+  accountSnapshotEl.innerHTML = `
+    <strong>${user.name || "Usuario"}</strong><br>
+    ${user.email || "-"} | Nivel ${levelLabel(account.level || "intermediate")}<br>
+    Actividad ${account.activityLevel || "moderate"} | ${account.trainingDays ?? 4} dias/semana | ${account.maxPrepMinutes ?? 40} min
+  `;
+
+  if (!user.profile) return;
+  const p = user.profile;
+  if (p.sex) document.getElementById("sex").value = p.sex;
+  if (Number.isFinite(p.age)) document.getElementById("age").value = p.age;
+  if (Number.isFinite(p.weight_kg)) document.getElementById("weight").value = p.weight_kg;
+  if (Number.isFinite(p.height_cm)) document.getElementById("height").value = p.height_cm;
+  if (p.goal) document.getElementById("goal").value = p.goal;
+  if (p.diet) document.getElementById("diet").value = p.diet;
+  if (Number.isFinite(p.meals_per_day)) document.getElementById("mealsPerDay").value = p.meals_per_day;
+  document.getElementById("lactoseFree").checked = !!p.lactose_free;
+  document.getElementById("glutenFree").checked = !!p.gluten_free;
+  document.getElementById("allergies").value = Array.isArray(p.allergies) ? p.allergies.join(", ") : "";
+  document.getElementById("dislikes").value = Array.isArray(p.dislikes) ? p.dislikes.join(", ") : "";
 }
 
 function payload() {
@@ -275,16 +307,31 @@ form.addEventListener("submit", async (event) => {
   statusEl.style.color = "#8ed8ff";
 
   try {
+    const profilePayload = payload();
     const result = await fetchData();
     renderMenu(result.data);
     localStorage.setItem("fitmenu_last_week", JSON.stringify(result.data));
     statusEl.textContent = "Menu generado correctamente";
     statusEl.style.color = "#7ef5c6";
     pulseNode(statusEl);
+    if (session?.userId) {
+      updateUserProfile(session.userId, profilePayload);
+    }
   } catch (error) {
     statusEl.textContent = error.message;
     statusEl.style.color = "#ff9ab8";
     pulseNode(statusEl);
   }
 });
+
+prefillFromSavedUser();
+
+const last = localStorage.getItem("fitmenu_last_week");
+if (last) {
+  try {
+    renderMenu(JSON.parse(last));
+  } catch {
+    // ignore stale cache
+  }
+}
 

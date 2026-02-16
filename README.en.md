@@ -28,12 +28,16 @@ It is designed to evolve from a **working MVP** into a **scalable B2B SaaS** for
 - Strong base for productization and commercial growth.
 
 ## :sparkles: Latest updates
-- Improved login with `email` and `password` (client-side validation).
+- Dual auth flow: `Sign in / Register` with local user persistence.
+- Existing-user detection by email and credential login.
 - Extended onboarding with lifestyle variables.
+- Login data is pushed into the form and stored profile is auto-filled.
+- New `AI Insight` block after form submission with personalized guidance.
 - Richer nutrition profile inputs.
 - Recommendation engine adapted to cooking level.
-- Expanded recipe catalog (`r1` to `r15`).
+- Expanded recipe catalog (`r1` to `r22`).
 - `3D Cards` page filtered by difficulty according to user level.
+- Enhanced 3D cards with image hover carousel and smoother interactions.
 
 ## :brain: Variables now affecting recommendations
 - `cook_level`: `basic`, `intermediate`, `advanced`
@@ -49,8 +53,8 @@ It is designed to evolve from a **working MVP** into a **scalable B2B SaaS** for
 - **Advanced**: `easy` + `medium` + `hard`.
 
 ## :compass: App flow
-1. `login.html`
-2. `form.html`
+1. `login.html` (register or sign in)
+2. `form.html` (auto-fills when user profile exists)
 3. `recipes.html`
 4. `recipe.html`
 
@@ -94,6 +98,11 @@ python -m http.server 5500
 - Phase 1: Functional MVP and demo-ready product.
 - Phase 2: Production persistence + robust authentication + adaptive feedback loop.
 - Phase 3: Multi-tenant B2B SaaS + analytics + ecosystem integrations.
+
+## :art: Professional GitHub branding
+A practical checklist to improve your GitHub profile and commercial presentation is included at:
+- `docs/github-profile-pro.md`
+- `docs/github-profile-readme-template.md`
 
 ## :bust_in_silhouette: Author
 **Viorel Gil Ruiz**

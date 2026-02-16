@@ -1,5 +1,6 @@
-﻿const SESSION_KEY = "fitmenu_session";
+const SESSION_KEY = "fitmenu_session";
 const SELECTED_RECIPE_KEY = "fitmenu_selected_recipe";
+const USERS_KEY = "fitmenu_users";
 const DEFAULT_API_URL = "http://127.0.0.1:8001";
 
 const RECIPE_IMAGE_SETS = {
@@ -128,6 +129,7 @@ function getSession() {
     if (!Number.isFinite(session.trainingDays)) session.trainingDays = 4;
     if (!Number.isFinite(session.maxPrepMinutes)) session.maxPrepMinutes = 40;
     if (!session.preferredCost) session.preferredCost = "any";
+    if (!session.authMode) session.authMode = "login";
     setSession(session);
     return session;
   } catch {
@@ -137,6 +139,94 @@ function getSession() {
 
 function setSession(data) {
   localStorage.setItem(SESSION_KEY, JSON.stringify(data));
+}
+
+function loadUsers() {
+  try {
+    const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+    return Array.isArray(users) ? users : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function normalizeEmail(email) {
+  return (email || "").trim().toLowerCase();
+}
+
+function findUserByEmail(email) {
+  const normalized = normalizeEmail(email);
+  return loadUsers().find((u) => normalizeEmail(u.email) === normalized) || null;
+}
+
+function registerUser(userData) {
+  const users = loadUsers();
+  const email = normalizeEmail(userData.email);
+  if (!email) return { ok: false, message: "Email invalido." };
+  if (users.some((u) => normalizeEmail(u.email) === email)) {
+    return { ok: false, message: "Ese email ya esta registrado. Inicia sesion." };
+  }
+
+  const now = new Date().toISOString();
+  const record = {
+    id: `u_${Math.random().toString(36).slice(2, 10)}`,
+    email,
+    password: userData.password,
+    name: userData.name,
+    created_at: now,
+    updated_at: now,
+    account: {
+      level: userData.level || "intermediate",
+      activityLevel: userData.activityLevel || "moderate",
+      trainingDays: Number.isFinite(userData.trainingDays) ? userData.trainingDays : 4,
+      maxPrepMinutes: Number.isFinite(userData.maxPrepMinutes) ? userData.maxPrepMinutes : 40,
+      preferredCost: userData.preferredCost || "any",
+    },
+    profile: userData.profile || null,
+  };
+
+  users.push(record);
+  saveUsers(users);
+  return { ok: true, user: record };
+}
+
+function authenticateUser(email, password) {
+  const user = findUserByEmail(email);
+  if (!user || user.password !== password) {
+    return { ok: false, message: "Usuario o contrasena incorrectos." };
+  }
+  return { ok: true, user };
+}
+
+function updateUserAccount(userId, patch) {
+  const users = loadUsers();
+  const idx = users.findIndex((u) => u.id === userId);
+  if (idx < 0) return null;
+  users[idx].account = { ...(users[idx].account || {}), ...patch };
+  users[idx].updated_at = new Date().toISOString();
+  saveUsers(users);
+  return users[idx];
+}
+
+function updateUserProfile(userId, profile) {
+  const users = loadUsers();
+  const idx = users.findIndex((u) => u.id === userId);
+  if (idx < 0) return null;
+  users[idx].profile = profile;
+  users[idx].updated_at = new Date().toISOString();
+  saveUsers(users);
+  return users[idx];
+}
+
+function getCurrentUser() {
+  const s = getSession();
+  if (!s?.userId) return null;
+  const users = loadUsers();
+  return users.find((u) => u.id === s.userId) || null;
 }
 
 function requireAuth() {
@@ -187,3 +277,7 @@ function levelLabel(level) {
   if (level === "advanced") return "Avanzado";
   return "Intermedio";
 }
+
+
+
+

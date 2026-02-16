@@ -32,12 +32,16 @@ Su objetivo es evolucionar desde un **MVP funcional** a un **SaaS B2B escalable*
 - Base tecnica lista para escalar y productizar.
 
 ## :sparkles: Novedades implementadas (ultima version)
-- Login mejorado con `email` y `contrasena` (validacion en cliente).
+- Login dual `Iniciar sesion / Registrarse` con persistencia local de usuarios.
+- Deteccion de usuario registrado por email y acceso con credenciales.
 - Onboarding ampliado con variables de estilo de vida.
+- Volcado de datos de cuenta al formulario y autocompletado de perfil guardado.
+- Bloque `Consejo IA` al generar menu con resumen personalizado de recomendaciones.
 - Perfil nutricional mas rico y personalizado.
 - Motor de recomendacion adaptado por nivel de cocina.
-- Catalogo ampliado de recetas (`r1` a `r15`).
+- Catalogo ampliado de recetas (`r1` a `r22`).
 - Filtro por dificultad en vista `Cartas 3D` segun nivel del usuario.
+- Tarjetas 3D mejoradas con rotacion y carrusel de imagenes en hover.
 
 ## :brain: Variables que ahora influyen en el menu
 Ademas de edad/peso/altura/objetivo/dieta/restricciones, ahora se usan:
@@ -58,8 +62,8 @@ Resultado: los menus son mas realistas para el contexto de cada persona.
 Esto aplica tanto al motor semanal como a la pagina de cartas.
 
 ## :compass: Flujo de la aplicacion
-1. `login.html`
-2. `form.html`
+1. `login.html` (registro o acceso de usuario existente)
+2. `form.html` (autocompleta perfil si ya estaba guardado)
 3. `recipes.html`
 4. `recipe.html`
 
@@ -113,6 +117,11 @@ frontend/    # app web multipagina + UX visual
 db/          # esquema SQL
 docs/        # brief, arquitectura, roadmap, demo API
 ```
+
+## :art: Branding GitHub profesional
+He dejado una guia accionable para pulir tu perfil y tu presencia comercial en GitHub:
+- `docs/github-profile-pro.md`
+- `docs/github-profile-readme-template.md`
 
 ## :arrow_forward: Ejecucion local
 ### Backend
