@@ -65,6 +65,7 @@ Open:
 - `docs/roadmap.md`
 - `docs/api-demo.md`
 - `docs/github-profile-pro.md`
+- `docs/github-profile-readme-ready.md`
 - `docs/github-profile-readme-ready-es.md`
 - `docs/github-profile-readme-ready-en.md`
 
