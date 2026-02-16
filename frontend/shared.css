@@ -252,7 +252,7 @@ input:focus, select:focus {
 }
 
 .panel-menu {
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto auto auto;
 }
 
 .menu-carousel-head {
@@ -277,8 +277,8 @@ input:focus, select:focus {
 .day-viewport {
   min-height: 0;
   height: auto;
-  max-height: 320px;
-  overflow: hidden;
+  max-height: 420px;
+  overflow: auto;
   position: relative;
   border-radius: 12px;
   border: 1px solid rgba(120, 170, 255, 0.24);
@@ -362,8 +362,8 @@ input:focus, select:focus {
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 0;
-  transform: translateY(-8px);
+  margin-top: 8px;
+  transform: translateY(0);
 }
 
 .day-dot {
