@@ -16,6 +16,15 @@
   <img src="https://img.shields.io/badge/Architecture-B2B%20Ready-7b1fa2" alt="architecture"/>
 </p>
 
+![FitMenu Hero](docs/assets/fitmenu-hero.svg)
+
+## 0. Vista visual
+### Flujo de producto
+![FitMenu Flow](docs/assets/fitmenu-flow.svg)
+
+### Arquitectura
+![FitMenu Architecture](docs/assets/fitmenu-architecture.svg)
+
 ## 1. Vision del proyecto
 **FitMenu AI Studio** es una plataforma de nutricion inteligente orientada a rendimiento deportivo, bienestar y adherencia alimentaria.
 

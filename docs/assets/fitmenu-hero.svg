@@ -1,0 +1,63 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#071124"/>
+      <stop offset="0.55" stop-color="#0B1F42"/>
+      <stop offset="1" stop-color="#0A2D4C"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(220 520) rotate(-10) scale(420 220)">
+      <stop stop-color="#3DFFDF" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#3DFFDF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1080 120) rotate(160) scale(360 220)">
+      <stop stop-color="#57A6FF" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#57A6FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#102448"/>
+      <stop offset="1" stop-color="#0C1832"/>
+    </linearGradient>
+    <linearGradient id="cta" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2CF7D0"/>
+      <stop offset="1" stop-color="#58A7FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#glowA)"/>
+  <rect width="1280" height="640" fill="url(#glowB)"/>
+
+  <g opacity="0.22" stroke="#3B67A8">
+    <path d="M0 72H1280M0 152H1280M0 232H1280M0 312H1280M0 392H1280M0 472H1280M0 552H1280"/>
+    <path d="M88 0V640M248 0V640M408 0V640M568 0V640M728 0V640M888 0V640M1048 0V640M1208 0V640"/>
+  </g>
+
+  <g>
+    <rect x="86" y="82" rx="18" width="706" height="478" fill="url(#card)" stroke="#2D548E"/>
+    <text x="132" y="154" fill="#7ED4FF" font-size="22" font-family="Segoe UI, Arial, sans-serif" letter-spacing="2">PERFORMANCE NUTRITION</text>
+    <text x="132" y="222" fill="#EAF3FF" font-size="72" font-weight="700" font-family="Segoe UI, Arial, sans-serif">FitMenu AI</text>
+    <text x="132" y="276" fill="#A8BCD8" font-size="28" font-family="Segoe UI, Arial, sans-serif">Smart weekly menus for fitness goals</text>
+    <text x="132" y="315" fill="#A8BCD8" font-size="28" font-family="Segoe UI, Arial, sans-serif">+ clear recipes + shopping list + KPI insights</text>
+
+    <rect x="132" y="370" rx="14" width="280" height="58" fill="url(#cta)"/>
+    <text x="198" y="407" fill="#04162E" font-size="27" font-weight="700" font-family="Segoe UI, Arial, sans-serif">MVP LIVE</text>
+
+    <rect x="430" y="370" rx="14" width="314" height="58" fill="#112645" stroke="#2E5690"/>
+    <text x="473" y="407" fill="#D9E7FF" font-size="27" font-weight="600" font-family="Segoe UI, Arial, sans-serif">B2B SCALABLE ROADMAP</text>
+
+    <text x="132" y="490" fill="#B7C9E3" font-size="24" font-family="Segoe UI, Arial, sans-serif">FastAPI • Vanilla JS • PostgreSQL-ready schema</text>
+  </g>
+
+  <g>
+    <rect x="838" y="112" rx="18" width="356" height="428" fill="#101F3D" stroke="#2C538A"/>
+    <rect x="868" y="150" rx="11" width="296" height="154" fill="#163966" stroke="#2E659C"/>
+    <rect x="868" y="330" rx="11" width="296" height="40" fill="#1A2B4A" stroke="#2E5A94"/>
+    <rect x="868" y="384" rx="11" width="296" height="40" fill="#1A2B4A" stroke="#2E5A94"/>
+    <rect x="868" y="438" rx="11" width="296" height="40" fill="#1A2B4A" stroke="#2E5A94"/>
+    <text x="900" y="205" fill="#E7F1FF" font-size="30" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Weekly Menu</text>
+    <text x="900" y="245" fill="#A8C3E9" font-size="20" font-family="Segoe UI, Arial, sans-serif">Goal-tailored meals</text>
+    <text x="902" y="357" fill="#E0EDFF" font-size="20" font-family="Segoe UI, Arial, sans-serif">3D recipe cards</text>
+    <text x="902" y="411" fill="#E0EDFF" font-size="20" font-family="Segoe UI, Arial, sans-serif">Step-by-step cooking</text>
+    <text x="902" y="465" fill="#E0EDFF" font-size="20" font-family="Segoe UI, Arial, sans-serif">Shopping automation</text>
+  </g>
+</svg>

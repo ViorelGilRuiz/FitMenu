@@ -1,0 +1,48 @@
+<svg width="1280" height="520" viewBox="0 0 1280 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#071227"/>
+      <stop offset="1" stop-color="#0B2749"/>
+    </linearGradient>
+    <linearGradient id="box" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#152E56"/>
+      <stop offset="1" stop-color="#102140"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2CF7D0"/>
+      <stop offset="1" stop-color="#58A7FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="520" rx="18" fill="url(#bg)" stroke="#2A5188"/>
+  <text x="60" y="64" fill="#EAF3FF" font-size="34" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Technical Architecture</text>
+
+  <g>
+    <rect x="78" y="130" width="344" height="286" rx="18" fill="url(#box)" stroke="#335C96"/>
+    <text x="110" y="176" fill="#7CD3FF" font-size="20" font-family="Segoe UI, Arial, sans-serif">FRONTEND</text>
+    <text x="110" y="222" fill="#EAF3FF" font-size="34" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Vanilla JS App</text>
+    <text x="110" y="266" fill="#AEC4E2" font-size="22" font-family="Segoe UI, Arial, sans-serif">login • form • cards 3D • recipe</text>
+    <text x="110" y="305" fill="#AEC4E2" font-size="22" font-family="Segoe UI, Arial, sans-serif">shared styles + animated background</text>
+  </g>
+
+  <g>
+    <rect x="468" y="130" width="344" height="286" rx="18" fill="url(#box)" stroke="#335C96"/>
+    <text x="500" y="176" fill="#7CD3FF" font-size="20" font-family="Segoe UI, Arial, sans-serif">BACKEND</text>
+    <text x="500" y="222" fill="#EAF3FF" font-size="34" font-weight="700" font-family="Segoe UI, Arial, sans-serif">FastAPI Engine</text>
+    <text x="500" y="266" fill="#AEC4E2" font-size="22" font-family="Segoe UI, Arial, sans-serif">rule-based menu generation</text>
+    <text x="500" y="305" fill="#AEC4E2" font-size="22" font-family="Segoe UI, Arial, sans-serif">nutrition filters + KPI computation</text>
+  </g>
+
+  <g>
+    <rect x="858" y="130" width="344" height="286" rx="18" fill="url(#box)" stroke="#335C96"/>
+    <text x="890" y="176" fill="#7CD3FF" font-size="20" font-family="Segoe UI, Arial, sans-serif">DATA LAYER</text>
+    <text x="890" y="222" fill="#EAF3FF" font-size="34" font-weight="700" font-family="Segoe UI, Arial, sans-serif">PostgreSQL Ready</text>
+    <text x="890" y="266" fill="#AEC4E2" font-size="22" font-family="Segoe UI, Arial, sans-serif">users • profiles • recipes</text>
+    <text x="890" y="305" fill="#AEC4E2" font-size="22" font-family="Segoe UI, Arial, sans-serif">weekly menus + history</text>
+  </g>
+
+  <g stroke="url(#accent)" stroke-width="5" stroke-linecap="round">
+    <path d="M430 274H458"/>
+    <path d="M820 274H848"/>
+  </g>
+</svg>

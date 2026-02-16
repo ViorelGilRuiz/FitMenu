@@ -1,0 +1,57 @@
+<svg width="1280" height="420" viewBox="0 0 1280 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#081428"/>
+      <stop offset="1" stop-color="#0B2342"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#152E56"/>
+      <stop offset="1" stop-color="#102140"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2CF7D0"/>
+      <stop offset="1" stop-color="#58A7FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="420" rx="18" fill="url(#bg)" stroke="#2A5188"/>
+
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="62" y="64" fill="#EAF3FF" font-size="34" font-weight="700">User Journey</text>
+    <text x="62" y="94" fill="#A9C0E0" font-size="20">From onboarding to final recipe execution</text>
+  </g>
+
+  <g>
+    <rect x="60" y="140" width="250" height="210" rx="16" fill="url(#card)" stroke="#345E98"/>
+    <text x="88" y="182" fill="#7FD6FF" font-size="18" font-family="Segoe UI, Arial, sans-serif">STEP 1</text>
+    <text x="88" y="220" fill="#EAF3FF" font-size="36" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Login</text>
+    <text x="88" y="262" fill="#B0C5E4" font-size="20" font-family="Segoe UI, Arial, sans-serif">Name + level</text>
+  </g>
+
+  <g>
+    <rect x="370" y="140" width="250" height="210" rx="16" fill="url(#card)" stroke="#345E98"/>
+    <text x="398" y="182" fill="#7FD6FF" font-size="18" font-family="Segoe UI, Arial, sans-serif">STEP 2</text>
+    <text x="398" y="220" fill="#EAF3FF" font-size="36" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Form</text>
+    <text x="398" y="262" fill="#B0C5E4" font-size="20" font-family="Segoe UI, Arial, sans-serif">Profile + weekly menu</text>
+  </g>
+
+  <g>
+    <rect x="680" y="140" width="250" height="210" rx="16" fill="url(#card)" stroke="#345E98"/>
+    <text x="708" y="182" fill="#7FD6FF" font-size="18" font-family="Segoe UI, Arial, sans-serif">STEP 3</text>
+    <text x="708" y="220" fill="#EAF3FF" font-size="36" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Cards 3D</text>
+    <text x="708" y="262" fill="#B0C5E4" font-size="20" font-family="Segoe UI, Arial, sans-serif">Recipe exploration</text>
+  </g>
+
+  <g>
+    <rect x="990" y="140" width="230" height="210" rx="16" fill="url(#card)" stroke="#345E98"/>
+    <text x="1016" y="182" fill="#7FD6FF" font-size="18" font-family="Segoe UI, Arial, sans-serif">STEP 4</text>
+    <text x="1016" y="220" fill="#EAF3FF" font-size="36" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Recipe</text>
+    <text x="1016" y="262" fill="#B0C5E4" font-size="20" font-family="Segoe UI, Arial, sans-serif">Full detail + steps</text>
+  </g>
+
+  <g stroke="url(#accent)" stroke-width="4" stroke-linecap="round">
+    <path d="M322 245H356"/>
+    <path d="M632 245H666"/>
+    <path d="M942 245H976"/>
+  </g>
+</svg>
