@@ -1,0 +1,35 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitMenu AI | Login</title>
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body class="login-mode" data-scene="login">
+  <canvas id="universe-bg"></canvas>
+  <div class="login-glow"></div>
+  <div class="login-grid"></div>
+  <main class="page center-page">
+    <section class="glass login-card">
+      <p class="eyebrow">Nutricion Inteligente</p>
+      <h1>FitMenu AI</h1>
+      <p class="subtitle">Accede para crear menus personalizados con IA</p>
+      <form id="loginForm" class="stack">
+        <label>Nombre<input id="name" required placeholder="Tu nombre" /></label>
+        <label>Nivel
+          <select id="level">
+            <option value="low">Bajo</option>
+            <option value="intermediate" selected>Intermedio</option>
+            <option value="advanced">Avanzado</option>
+          </select>
+        </label>
+        <button class="primary" type="submit">Entrar</button>
+      </form>
+    </section>
+  </main>
+  <script src="background.js"></script>
+  <script src="shared.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

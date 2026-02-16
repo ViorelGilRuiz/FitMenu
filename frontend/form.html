@@ -1,0 +1,91 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitMenu AI | Formulario</title>
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <canvas id="universe-bg"></canvas>
+  <div class="page app-page">
+    <header class="topbar glass topbar-pro">
+      <div class="brand-block">
+        <p class="eyebrow">Performance Nutrition</p>
+        <h1>FitMenu AI Studio</h1>
+        <p id="welcome" class="muted"></p>
+      </div>
+      <nav class="nav-links">
+        <button id="backBtn" class="ghost">Atras</button>
+        <a href="login.html">Login</a>
+        <a class="active" href="form.html">Formulario</a>
+        <a href="recipes.html">Cartas 3D</a>
+        <a href="recipe.html">Receta</a>
+        <button id="logoutBtn" class="ghost">Salir</button>
+      </nav>
+    </header>
+
+    <main class="content-grid">
+      <section class="glass panel panel-profile">
+        <h2>Perfil</h2>
+        <form id="profileForm" class="stack scroll-area">
+          <div class="field-grid">
+            <label>Sexo
+              <select id="sex">
+                <option value="female">Mujer</option>
+                <option value="male">Hombre</option>
+              </select>
+            </label>
+            <label>Edad<input id="age" type="number" min="14" max="90" value="28" required /></label>
+            <label>Peso (kg)<input id="weight" type="number" min="30" max="300" step="0.1" value="75" required /></label>
+            <label>Altura (cm)<input id="height" type="number" min="120" max="230" value="178" required /></label>
+            <label>Comidas al dia<input id="mealsPerDay" type="number" min="3" max="6" value="4" /></label>
+          </div>
+          <label>Objetivo
+            <select id="goal">
+              <option value="lose_fat">Perder grasa</option>
+              <option value="maintain">Mantener</option>
+              <option value="gain_muscle" selected>Ganar musculo</option>
+            </select>
+          </label>
+          <label>Dieta
+            <select id="diet">
+              <option value="omnivore" selected>Omnivoro</option>
+              <option value="vegetarian">Vegetariano</option>
+              <option value="vegan">Vegano</option>
+            </select>
+          </label>
+          <div class="toggle-row">
+            <label class="row"><input id="lactoseFree" type="checkbox" /> Sin lactosa</label>
+            <label class="row"><input id="glutenFree" type="checkbox" /> Sin gluten</label>
+          </div>
+          <label>Alergias (coma separada)<input id="allergies" placeholder="peanut, shellfish" /></label>
+          <button class="primary sticky" id="generateBtn" type="submit">Generar menu semanal</button>
+        </form>
+        <p id="status" class="muted"></p>
+      </section>
+
+      <section class="glass panel panel-menu">
+        <h2>Menu semanal</h2>
+        <div id="summary" class="summary"></div>
+        <div class="menu-carousel-head">
+          <button id="prevDayBtn" class="ghost mini-btn" type="button">Anterior</button>
+          <div id="dayIndicator" class="day-indicator">Dia</div>
+          <button id="nextDayBtn" class="ghost mini-btn" type="button">Siguiente</button>
+        </div>
+        <div id="menu" class="day-viewport"></div>
+        <div id="dayDots" class="day-dots"></div>
+      </section>
+
+      <section class="glass panel panel-detail">
+        <h2>Detalle</h2>
+        <div id="recipeDetail" class="scroll-area">Selecciona una comida del menu para ver la receta.</div>
+      </section>
+    </main>
+  </div>
+
+  <script src="background.js"></script>
+  <script src="shared.js"></script>
+  <script src="form.js"></script>
+</body>
+</html>
