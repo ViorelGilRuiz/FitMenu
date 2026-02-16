@@ -102,7 +102,8 @@ Modelo de datos SQL (preparado para PostgreSQL)
 - `docs/api-demo.md` → pruebas rápidas de API.
 - `docs/github-profile-pro.md` → mejora profesional de perfil GitHub.
 - `docs/github-profile-readme-template.md` → plantilla de README de perfil.
-- `docs/github-profile-readme-ready.md` → README de perfil ya montado con tus datos.
+- `docs/github-profile-readme-ready-es.md` → README de perfil listo (español).
+- `docs/github-profile-readme-ready-en.md` → README de perfil listo (inglés).
 
 ## :arrow_forward: Ejecución local
 ### Backend

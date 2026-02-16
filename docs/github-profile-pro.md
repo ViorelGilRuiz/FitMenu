@@ -1,10 +1,10 @@
-# GitHub Profile Pro Guide (Viorel)
+﻿# GitHub Profile Pro Guide (Viorel)
 
 ## Objetivo
-Convertir tu perfil de GitHub en una pagina comercial: clara, profesional y enfocada en venta de valor tecnico.
+Convertir tu perfil de GitHub en una pagina comercial: clara, profesional y orientada a negocio.
 
 ## 1) Bio y encabezado
-- Titular corto y directo: `Frontend Angular | Full-stack Junior-Mid | TypeScript • NestJS`.
+- Titular corto y directo: `Frontend Angular | Full-stack Junior-Mid | TypeScript | NestJS`.
 - Subtitulo orientado a valor: `Construyo productos web escalables con enfoque en UX y negocio`.
 - Ubicacion y contacto profesional visibles.
 
@@ -14,7 +14,7 @@ Convertir tu perfil de GitHub en una pagina comercial: clara, profesional y enfo
 3. Proyecto frontend fuerte en interfaz.
 4. Proyecto de base de datos o arquitectura.
 5. Proyecto de integracion API.
-6. Proyecto pequeño pero pulido con testing.
+6. Proyecto pequeno pero pulido con testing.
 
 ## 3) README del perfil (repo `ViorelGilRuiz/ViorelGilRuiz`)
 Incluye:
@@ -24,9 +24,10 @@ Incluye:
 - bloque `How I work` (calidad, arquitectura, velocidad de entrega),
 - contacto (`LinkedIn`, email).
 
-Plantilla lista para pegar:
-- `docs/github-profile-readme-ready.md`
-- Banner visual incluido: `docs/assets/github-profile-banner.svg`
+Plantillas listas para pegar:
+- `docs/github-profile-readme-ready-es.md`
+- `docs/github-profile-readme-ready-en.md`
+- Banner visual: `docs/assets/github-profile-banner.svg`
 
 ## 4) Estandar para cada repo que quieras vender
 - `README` con:
@@ -39,7 +40,7 @@ Plantilla lista para pegar:
 - Topics de GitHub (5-8): `fastapi`, `javascript`, `ai`, `nutrition`, `b2b`, etc.
 - Descripcion corta del repo orientada a negocio.
 
-## 5) Señales de profesionalidad que suben conversion
+## 5) Senales de profesionalidad que suben conversion
 - Commits con mensajes claros (`feat`, `fix`, `docs`).
 - Issues o TODO visibles para roadmap.
 - Releases o tags para hitos importantes.
@@ -49,8 +50,8 @@ Plantilla lista para pegar:
 - Actualizar bio.
 - Reordenar pins.
 - Mejorar descripcion de `FitMenu`.
-- Añadir topics en `FitMenu`.
+- Anadir topics en `FitMenu`.
 - Crear repo de perfil y publicar README personal.
 
 ## 7) Texto sugerido para tu bio (copiar/pegar)
-`Frontend Angular / Full-stack Junior-Mid | TypeScript · NestJS · FastAPI | Construyendo productos digitales enfocados en negocio y experiencia de usuario.`
+`Frontend Angular / Full-stack Junior-Mid | TypeScript | NestJS | FastAPI | Construyendo productos digitales enfocados en negocio y experiencia de usuario.`
