@@ -1,114 +1,134 @@
 # FitMenu AI Studio
 
-> Plataforma inteligente de nutricion y fitness para generar menus semanales personalizados, recetas paso a paso y una experiencia visual moderna orientada a producto B2B.
+<p align="center">
+  <strong>AI Nutrition Platform for Fitness & Wellness</strong><br/>
+  Menus semanales inteligentes, recetas paso a paso y experiencia visual premium para entornos B2B.
+</p>
 
-## Estado del proyecto
-**Proyecto en desarrollo activo (MVP funcional + evolucion continua).**
+<p align="center">
+  <a href="./README.en.md">English Version</a>
+</p>
 
-FitMenu AI Studio ya permite generar menus semanales segun el perfil del usuario, ver recetas con detalle nutricional y navegar por una experiencia multipagina preparada para demo comercial.  
-La vision es escalarlo a producto SaaS multi-tenant para gimnasios, empresas wellness, apps health y partners corporativos.
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-In%20Development-1f6feb" alt="status"/>
+  <img src="https://img.shields.io/badge/Backend-FastAPI-009688" alt="backend"/>
+  <img src="https://img.shields.io/badge/Frontend-Vanilla%20JS-ffb300" alt="frontend"/>
+  <img src="https://img.shields.io/badge/Architecture-B2B%20Ready-7b1fa2" alt="architecture"/>
+</p>
 
-## Problema que resolvemos
-Muchas personas quieren mejorar su alimentacion para rendir mejor (gimnasio, salud, composicion corporal), pero no saben:
-- que cocinar cada dia,
-- como organizar un menu sostenible,
-- como adaptar recetas a objetivos y restricciones,
-- como mantener adherencia semana tras semana.
+## 1. Vision del proyecto
+**FitMenu AI Studio** es una plataforma de nutricion inteligente orientada a rendimiento deportivo, bienestar y adherencia alimentaria.
 
-## Solucion FitMenu AI
-FitMenu AI transforma datos basicos del usuario en:
-- menu semanal personalizado,
-- recetas saludables con pasos claros,
-- macros y calorias por receta,
+El objetivo es evolucionar desde un **MVP funcional** a un **SaaS B2B escalable**, preparado para gimnasios, empresas wellness, coaches y plataformas de salud digital.
+
+## 2. Problema que resuelve
+Personas que entrenan o quieren cuidarse suelen bloquearse por:
+- falta de planificacion semanal realista,
+- recetas poco claras o poco sostenibles,
+- dificultad para adaptar dieta a objetivos y restricciones,
+- baja adherencia por friccion diaria.
+
+## 3. Solucion propuesta
+FitMenu AI convierte datos de perfil en decisiones utiles:
+- menu semanal personalizado por objetivo,
+- recetas saludables con instrucciones paso a paso,
+- informacion nutricional (kcal, proteina, carbohidratos, grasa),
 - lista de compra agregada,
-- experiencia visual atractiva para mejorar engagement.
+- experiencia UI moderna para aumentar engagement.
 
-## Propuesta de valor B2B
-- Personalizacion de nutricion a escala.
-- Mejor adherencia y retencion de usuarios finales.
-- Base para white-label en gimnasios y empresas.
-- Integracion futura por API con ecosistemas de entrenamiento/salud.
+## 4. Valor para empresas (B2B)
+- Personalizacion a escala sin aumentar coste operativo.
+- Mayor retencion y adherencia de usuarios finales.
+- Base para integraciones white-label.
+- Estructura preparada para evolucion multi-tenant.
 
-## Demo funcional actual
-### Flujo multipagina
+## 5. Estado actual
+**En desarrollo activo.**
+
+Actualmente el proyecto incluye:
+- backend operativo con motor de reglas,
+- frontend multipagina navegable,
+- flujo completo desde login hasta receta,
+- base documental tecnica y de producto.
+
+## 6. Flujo funcional de la aplicacion
 1. `login.html`  
-   Captura nombre y nivel del usuario (`Bajo`, `Intermedio`, `Avanzado`).
+   Captura nombre y nivel de usuario (`Bajo`, `Intermedio`, `Avanzado`).
 2. `form.html`  
-   Perfil nutricional + generacion del menu semanal.
+   Configuracion del perfil nutricional y generacion del menu semanal.
 3. `recipes.html`  
-   Galeria de recetas en cartas 3D.
+   Exploracion visual en cartas 3D de recetas.
 4. `recipe.html`  
-   Vista de receta completa paso a paso.
+   Vista completa de receta seleccionada y preparacion.
 
-### Personalizacion por nivel
-- **Bajo:** experiencia simplificada.
-- **Intermedio:** experiencia estandar.
-- **Avanzado:** mayor detalle (KPIs y datos nutricionales extendidos).
-
-## Arquitectura tecnica
+## 7. Arquitectura tecnica
 ```text
 Frontend (HTML/CSS/JS multipagina)
         |
         v
-Backend API (FastAPI, motor de reglas y seleccion de recetas)
+Backend API (FastAPI + reglas nutricionales)
         |
         v
-Modelo de datos SQL (schema PostgreSQL para evolucion productiva)
+Data Model SQL (base para PostgreSQL en produccion)
 ```
 
-## Stack tecnologico
-- **Frontend:** HTML, CSS, JavaScript vanilla.
+### Stack
+- **Frontend:** HTML5, CSS3, JavaScript (Vanilla).
 - **Backend:** Python, FastAPI, Pydantic.
-- **Base de datos (diseno):** PostgreSQL (schema en `db/schema.sql`).
-- **API docs:** Swagger/OpenAPI via FastAPI.
+- **Persistencia (diseno):** PostgreSQL (`db/schema.sql`).
+- **Documentacion API:** OpenAPI/Swagger.
 
-## Backend: funcionamiento
-El backend aplica reglas nutricionales sobre:
+## 8. Motor nutricional (backend)
+La API procesa:
+- sexo (`male`, `female`),
+- edad, peso, altura,
 - objetivo (`lose_fat`, `maintain`, `gain_muscle`),
-- dieta (`omnivore`, `vegetarian`, `vegan`),
+- tipo de dieta (`omnivore`, `vegetarian`, `vegan`),
 - restricciones (`lactose_free`, `gluten_free`),
 - alergias,
-- numero de comidas por dia.
+- comidas por dia.
 
-### Logica principal
-1. Estima calorias objetivo segun perfil.
-2. Filtra recetas compatibles por dieta/restricciones/alergenos.
-3. Asigna recetas por franja de comida (`breakfast`, `lunch`, `dinner`, etc.).
-4. Genera menu semanal de 7 dias.
-5. (Endpoint full) agrega KPIs y lista de compra consolidada.
+### Pipeline de decision
+1. Estimacion calorica por perfil.
+2. Filtrado de recetas compatibles.
+3. Seleccion por tipo de comida (desayuno/comida/cena/snacks).
+4. Construccion de plan semanal de 7 dias.
+5. Calculo de KPIs y lista de compra consolidada (endpoint full).
 
-## Endpoints disponibles
-| Metodo | Endpoint | Descripcion |
+## 9. Endpoints principales
+| Metodo | Endpoint | Uso |
 |---|---|---|
-| `GET` | `/health` | Estado de la API |
-| `POST` | `/menus/weekly` | Genera menu semanal resumido |
-| `POST` | `/menus/weekly/full` | Menu semanal completo + KPIs + lista compra |
-| `GET` | `/recipes` | Lista de recetas |
-| `GET` | `/recipes/{recipe_id}` | Detalle de receta |
+| `GET` | `/health` | Estado de servicio |
+| `POST` | `/menus/weekly` | Menu semanal resumido |
+| `POST` | `/menus/weekly/full` | Menu completo + KPIs + shopping list |
+| `GET` | `/recipes` | Catalogo de recetas |
+| `GET` | `/recipes/{recipe_id}` | Receta individual |
 
-## Estructura del repositorio
-- `backend/`: API FastAPI, motor de menu y logica de recomendacion.
-- `db/`: schema SQL base para evolucion a PostgreSQL.
-- `docs/`: product brief, arquitectura, roadmap y demo de API.
-- `frontend/`: app web multipagina (`login`, `form`, `recipes`, `recipe`) y estilos compartidos.
-
-## Modelo de datos (DB)
-Diseno SQL preparado para evolucion a produccion:
+## 10. Esquema de datos (SQL)
+Entidades actuales:
 - `users`
 - `user_profiles`
 - `recipes`
 - `weekly_menus`
 
-### Rol de cada entidad
-- **users:** identidad basica del usuario.
-- **user_profiles:** preferencias nutricionales y restricciones.
-- **recipes:** catalogo nutricional con ingredientes y pasos.
-- **weekly_menus:** plan semanal persistido en JSONB + trazabilidad.
+Rol funcional:
+- `users`: identidad.
+- `user_profiles`: preferencias y restricciones.
+- `recipes`: datos nutricionales + ingredientes + pasos.
+- `weekly_menus`: planes semanales persistidos.
 
-> Esquema completo en `db/schema.sql`.
+Referencia: `db/schema.sql`
 
-## Como ejecutar el proyecto
-### 1) Backend
+## 11. Estructura del repositorio
+```text
+backend/     # API FastAPI y motor de recomendacion
+frontend/    # UI multipagina + animaciones + navegacion
+db/          # schema SQL
+docs/        # producto, arquitectura, roadmap y demo API
+```
+
+## 12. Ejecucion local
+### Backend
 ```bash
 cd backend
 python -m venv .venv
@@ -117,44 +137,39 @@ python -m venv .venv
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8001
 ```
-
-API docs:
+Swagger:
 - `http://127.0.0.1:8001/docs`
 
-### 2) Frontend
+### Frontend
 ```bash
 cd frontend
 python -m http.server 5500
 ```
-
 Abrir:
 - `http://127.0.0.1:5500/login.html`
 
-## Seguridad y notas de producto
-- Este MVP no sustituye asesoria medica o nutricional profesional.
-- La autenticacion actual es de demo; en roadmap se contempla auth robusta y control multi-tenant.
-
-## Roadmap de escalado
+## 13. Roadmap de escalado
 ### Fase 1 (actual)
-- MVP funcional end-to-end.
-- Generacion de menu + recetas + shopping list.
-- UX multipagina con enfoque demo comercial.
+- MVP end-to-end funcional.
+- Menus + recetas + lista de compra.
+- UX orientada a demo comercial.
 
 ### Fase 2
-- Persistencia completa en PostgreSQL.
-- Login real y cuentas de usuario.
-- Feedback loop para mejorar recomendaciones.
-- Ajustes por sexo/objetivo con reglas mas finas.
+- Persistencia completa real en PostgreSQL.
+- Autenticacion robusta y gestion de cuentas.
+- Feedback loop para recomendaciones adaptativas.
+- Reglas nutricionales mas finas por sexo/objetivo/contexto.
 
 ### Fase 3
-- Plataforma SaaS B2B multi-tenant.
+- SaaS B2B multi-tenant.
 - Panel admin para empresas.
-- Analytics y reporting de adherencia.
-- Integraciones externas (apps fitness, wearables, ERPs wellness).
+- Analitica de adherencia y rendimiento.
+- Integraciones con apps fitness/wearables/partners.
 
-## Vision
-Convertir FitMenu AI en una plataforma escalable de nutricion inteligente para empresas, con impacto real en adherencia, salud preventiva y rendimiento deportivo.
+## 14. Nota profesional
+Este sistema es una plataforma tecnologica de apoyo nutricional.  
+No reemplaza evaluacion medica o nutricional profesional.
 
-## Autor
+## 15. Autor
 **Viorel Gil Ruiz**  
-Proyecto en evolucion continua. Se iran incorporando mejoras funcionales, tecnicas y de producto de forma iterativa.
+Proyecto en construccion continua con foco en calidad tecnica, producto y escalabilidad.
