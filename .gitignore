@@ -6,6 +6,12 @@ __pycache__/
 .venv/
 venv/
 
+# Node / Angular / Nest
+node_modules/
+**/node_modules/
+apps/**/dist/
+apps/**/.angular/
+
 # Frontend runtime
 frontend/.cache/
 
@@ -20,3 +26,4 @@ Thumbs.db
 
 # Runtime auth storage
 backend/data/users.json
+

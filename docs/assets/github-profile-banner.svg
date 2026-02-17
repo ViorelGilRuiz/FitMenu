@@ -1,4 +1,4 @@
-<svg width="1280" height="360" viewBox="0 0 1280 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+﻿<svg width="1280" height="360" viewBox="0 0 1280 360" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="360" gradientUnits="userSpaceOnUse">
       <stop stop-color="#061323"/>
@@ -18,7 +18,7 @@
     <path d="M92 0V360M236 0V360M380 0V360M524 0V360M668 0V360M812 0V360M956 0V360M1100 0V360"/>
   </g>
 
-  <text x="70" y="110" fill="#93DEFF" font-size="19" letter-spacing="2" font-family="Segoe UI, Arial, sans-serif">FRONTEND ANGULAR • FULL-STACK JUNIOR-MID</text>
+  <text x="70" y="110" fill="#93DEFF" font-size="19" letter-spacing="2" font-family="Segoe UI, Arial, sans-serif">FRONTEND ANGULAR | FULL-STACK JUNIOR-MID</text>
   <text x="70" y="172" fill="#EAF3FF" font-size="60" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Viorel Gil Ruiz</text>
   <text x="70" y="220" fill="#B7CCE8" font-size="26" font-family="Segoe UI, Arial, sans-serif">Building products with TypeScript, NestJS, FastAPI and UX focus</text>
 
@@ -26,7 +26,7 @@
   <text x="120" y="290" fill="#03223A" font-size="27" font-weight="700" font-family="Segoe UI, Arial, sans-serif">Open to Work</text>
 
   <rect x="376" y="254" width="360" height="56" rx="14" fill="#122949" stroke="#2F5A95"/>
-  <text x="420" y="289" fill="#E8F2FF" font-size="24" font-weight="600" font-family="Segoe UI, Arial, sans-serif">AI • Full-Stack • B2B Projects</text>
+  <text x="420" y="289" fill="#E8F2FF" font-size="24" font-weight="600" font-family="Segoe UI, Arial, sans-serif">AI | Full-Stack | B2B Projects</text>
 
   <circle cx="1110" cy="118" r="78" fill="#0D1D3A" stroke="#335E98"/>
   <text x="1055" y="128" fill="#9EE6FF" font-size="32" font-weight="700" font-family="Segoe UI, Arial, sans-serif">VG</text>
@@ -35,3 +35,4 @@
   <text x="1016" y="266" fill="#96DEFF" font-size="18" font-family="Segoe UI, Arial, sans-serif">Current flagship:</text>
   <text x="1016" y="294" fill="#EAF3FF" font-size="26" font-weight="700" font-family="Segoe UI, Arial, sans-serif">FitMenu AI</text>
 </svg>
+

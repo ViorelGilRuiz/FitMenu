@@ -76,13 +76,21 @@ async function loadRecipes() {
   const visible = filtered.length ? filtered : recipes;
 
   cardsGrid.innerHTML = "";
-  for (const recipe of visible) {
+  visible.forEach((recipe, index) => {
     const card = document.createElement("article");
     card.className = "recipe-card";
+    card.style.setProperty("--card-delay", `${index * 48}ms`);
+    const difficulty = recipe.difficulty || "easy";
+    const difficultyLabel = difficulty === "hard" ? "avanzada" : difficulty === "medium" ? "media" : "facil";
     card.innerHTML = `
-      <img src="${recipeImage(recipe.id)}" onerror="this.onerror=null;this.src='${FALLBACK_IMG}'" alt="${recipe.name}" />
-      <h3>${recipe.name}</h3>
-      <p>${recipe.calories} kcal | P ${recipe.protein_g}g | ${recipe.prep_minutes || "-"} min | ${recipe.difficulty || "easy"}</p>
+      <div class="recipe-card-media">
+        <img src="${recipeImage(recipe.id)}" onerror="this.onerror=null;this.src='${FALLBACK_IMG}'" alt="${recipe.name}" />
+        <span class="recipe-card-difficulty ${difficulty}">${difficultyLabel}</span>
+      </div>
+      <div class="recipe-card-body">
+        <h3>${recipe.name}</h3>
+        <p>${recipe.calories} kcal | P ${recipe.protein_g}g | ${recipe.prep_minutes || "-"} min</p>
+      </div>
     `;
 
     card.addEventListener("click", () => {
@@ -94,7 +102,7 @@ async function loadRecipes() {
     attachHoverImageRotation(card, imgEl, recipe.id);
     tiltCard(card);
     cardsGrid.appendChild(card);
-  }
+  });
 }
 
 loadRecipes();

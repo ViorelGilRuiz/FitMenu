@@ -14,15 +14,77 @@ const nextDayBtn = document.getElementById("nextDayBtn");
 const recipeDetailEl = document.getElementById("recipeDetail");
 const aiInsightEl = document.getElementById("aiInsight");
 const accountSnapshotEl = document.getElementById("accountSnapshot");
+const onboardingWizardEl = document.getElementById("onboardingWizard");
+const wizardStepsEl = document.getElementById("wizardSteps");
+const wizardHintEl = document.getElementById("wizardHint");
+const wizardPrevBtn = document.getElementById("wizardPrevBtn");
+const wizardNextBtn = document.getElementById("wizardNextBtn");
+const generateBtn = document.getElementById("generateBtn");
+const prevWeekBtn = document.getElementById("prevWeekBtn");
+const nextWeekBtn = document.getElementById("nextWeekBtn");
+const weekIndicatorEl = document.getElementById("weekIndicator");
+const profileStepEls = Array.from(document.querySelectorAll(".profile-step"));
+const WEEK_HISTORY_KEY = "fitmenu_week_history";
 
 const menuState = {
+  weeks: [],
+  currentWeekIndex: 0,
+  activeWeekMeta: null,
   week: [],
   currentDayIndex: 0,
+};
+
+const wizardState = {
+  enabled: true,
+  currentStep: 0,
+  labels: ["Perfil", "Preferencias", "Restricciones", "Generar plan"],
 };
 
 if (session) {
   const activityLabel = session.activityLevel === "high" ? "Alta" : session.activityLevel === "low" ? "Baja" : "Media";
   welcome.textContent = `${session.name} | Nivel ${levelLabel(session.level)} | Actividad ${activityLabel} | ${session.maxPrepMinutes || 40} min/receta`;
+}
+
+function createWeekMeta(index) {
+  return {
+    label: `Semana ${index + 1}`,
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function getWeekHistory() {
+  try {
+    const data = JSON.parse(localStorage.getItem(WEEK_HISTORY_KEY) || "[]");
+    if (!Array.isArray(data)) return [];
+    return data.filter((x) => x && x.menu && Array.isArray(x.menu.week));
+  } catch {
+    return [];
+  }
+}
+
+function setWeekHistory(history) {
+  localStorage.setItem(WEEK_HISTORY_KEY, JSON.stringify(history.slice(-8)));
+}
+
+function pushWeek(menu) {
+  const history = getWeekHistory();
+  const nextIndex = history.length;
+  history.push({
+    meta: createWeekMeta(nextIndex),
+    menu,
+  });
+  setWeekHistory(history);
+  return history;
+}
+
+function refreshWeekIndicator() {
+  if (!weekIndicatorEl) return;
+  const total = menuState.weeks.length;
+  if (!total) {
+    weekIndicatorEl.textContent = "Sin semanas";
+    return;
+  }
+  weekIndicatorEl.textContent = `${menuState.activeWeekMeta?.label || "Semana"} (${menuState.currentWeekIndex + 1}/${total})`;
 }
 
 async function prefillFromSavedUser() {
@@ -36,6 +98,8 @@ async function prefillFromSavedUser() {
 
   if (!user) {
     accountSnapshotEl.textContent = "No hay perfil persistido de usuario. Completa el formulario para guardarlo.";
+    wizardState.enabled = true;
+    initWizard();
     return;
   }
 
@@ -46,7 +110,13 @@ async function prefillFromSavedUser() {
     Actividad ${account.activity_level || "moderate"} | ${account.training_days ?? 4} dias/semana | ${account.max_prep_minutes ?? 40} min
   `;
 
-  if (!user.profile) return;
+  if (!user.profile) {
+    wizardState.enabled = true;
+    initWizard();
+    return;
+  }
+
+  wizardState.enabled = false;
   const p = user.profile;
   if (p.sex) document.getElementById("sex").value = p.sex;
   if (Number.isFinite(p.age)) document.getElementById("age").value = p.age;
@@ -59,6 +129,116 @@ async function prefillFromSavedUser() {
   document.getElementById("glutenFree").checked = !!p.gluten_free;
   document.getElementById("allergies").value = Array.isArray(p.allergies) ? p.allergies.join(", ") : "";
   document.getElementById("dislikes").value = Array.isArray(p.dislikes) ? p.dislikes.join(", ") : "";
+  initWizard();
+}
+
+function validateProfilePayload(profilePayload) {
+  if (!profilePayload.sex) return false;
+  if (!(profilePayload.age >= 14 && profilePayload.age <= 90)) return false;
+  if (!(profilePayload.weight_kg > 30 && profilePayload.weight_kg < 300)) return false;
+  if (!(profilePayload.height_cm >= 120 && profilePayload.height_cm <= 230)) return false;
+  if (!(profilePayload.meals_per_day >= 3 && profilePayload.meals_per_day <= 6)) return false;
+  if (!profilePayload.goal || !profilePayload.diet) return false;
+  return true;
+}
+
+function isStepValid(stepIndex) {
+  const p = payload();
+  if (stepIndex === 0) {
+    return !!p.sex && p.age >= 14 && p.age <= 90 && p.weight_kg > 30 && p.height_cm >= 120;
+  }
+  if (stepIndex === 1) {
+    return p.meals_per_day >= 3 && p.meals_per_day <= 6 && !!p.goal && !!p.diet;
+  }
+  if (stepIndex === 2) {
+    return true;
+  }
+  return validateProfilePayload(p);
+}
+
+function wizardHintText() {
+  const hints = [
+    "Completa tus datos base para personalizar calorias y macros.",
+    "Define objetivo, dieta y frecuencia de comidas.",
+    "Ajusta restricciones y preferencias de ingredientes.",
+    "Revisa todo y genera tu menu semanal.",
+  ];
+  return hints[wizardState.currentStep] || "";
+}
+
+function updateGenerateButtonState() {
+  if (!generateBtn) return;
+  if (!wizardState.enabled) {
+    generateBtn.disabled = !validateProfilePayload(payload());
+    return;
+  }
+  generateBtn.disabled = wizardState.currentStep !== 3 || !validateProfilePayload(payload());
+}
+
+function renderWizardSteps() {
+  if (!wizardStepsEl) return;
+  wizardStepsEl.innerHTML = "";
+  wizardState.labels.forEach((label, index) => {
+    const step = document.createElement("div");
+    const isActive = index === wizardState.currentStep;
+    const isDone = index < wizardState.currentStep;
+    step.className = `wizard-step-chip ${isActive ? "active" : ""} ${isDone ? "done" : ""}`.trim();
+    step.textContent = label;
+    wizardStepsEl.appendChild(step);
+  });
+}
+
+function renderWizardView() {
+  if (!wizardState.enabled) {
+    onboardingWizardEl?.classList.add("hidden");
+    profileStepEls.forEach((el) => el.classList.remove("hidden"));
+    updateGenerateButtonState();
+    return;
+  }
+
+  onboardingWizardEl?.classList.remove("hidden");
+  profileStepEls.forEach((el) => {
+    const step = Number(el.dataset.step || -1);
+    el.classList.toggle("hidden", step !== wizardState.currentStep);
+  });
+
+  if (wizardPrevBtn) wizardPrevBtn.disabled = wizardState.currentStep === 0;
+  if (wizardNextBtn) {
+    wizardNextBtn.disabled = wizardState.currentStep >= wizardState.labels.length - 1;
+    wizardNextBtn.textContent = wizardState.currentStep >= wizardState.labels.length - 1 ? "Listo" : "Siguiente";
+  }
+
+  if (wizardHintEl) wizardHintEl.textContent = wizardHintText();
+  renderWizardSteps();
+  updateGenerateButtonState();
+}
+
+function initWizard() {
+  if (wizardState.enabled) wizardState.currentStep = 0;
+  renderWizardView();
+}
+
+function bindWizardEvents() {
+  if (!wizardPrevBtn || !wizardNextBtn) return;
+
+  wizardPrevBtn.addEventListener("click", () => {
+    if (!wizardState.enabled) return;
+    wizardState.currentStep = Math.max(0, wizardState.currentStep - 1);
+    renderWizardView();
+  });
+
+  wizardNextBtn.addEventListener("click", () => {
+    if (!wizardState.enabled) return;
+    if (!isStepValid(wizardState.currentStep)) {
+      statusEl.textContent = "Completa correctamente los datos del paso actual antes de continuar.";
+      statusEl.style.color = "#ff9ab8";
+      pulseNode(statusEl);
+      return;
+    }
+    wizardState.currentStep = Math.min(wizardState.labels.length - 1, wizardState.currentStep + 1);
+    statusEl.textContent = "";
+    renderWizardView();
+  });
 }
 
 function payload() {
@@ -129,15 +309,16 @@ async function fetchData() {
 }
 
 function showSummary(menu) {
+  const weekLabel = menuState.activeWeekMeta?.label ? `${menuState.activeWeekMeta.label} · ` : "";
   if (session.level === "advanced" && menu.kpis) {
-    summaryEl.innerHTML = `Objetivo <strong>${menu.target_calories}</strong> kcal/dia | Recetas unicas <strong>${menu.kpis.unique_recipes}</strong><br>Promedio kcal <strong>${menu.kpis.avg_daily_calories}</strong> | Proteina <strong>${menu.kpis.avg_daily_protein_g} g</strong> | Prep <strong>${menu.kpis.avg_prep_minutes_per_meal} min</strong>`;
+    summaryEl.innerHTML = `${weekLabel}Objetivo <strong>${menu.target_calories}</strong> kcal/dia | Recetas unicas <strong>${menu.kpis.unique_recipes}</strong><br>Promedio kcal <strong>${menu.kpis.avg_daily_calories}</strong> | Proteina <strong>${menu.kpis.avg_daily_protein_g} g</strong> | Prep <strong>${menu.kpis.avg_prep_minutes_per_meal} min</strong>`;
     return;
   }
   if (session.level === "intermediate") {
-    summaryEl.innerHTML = `Objetivo <strong>${menu.target_calories}</strong> kcal/dia`;
+    summaryEl.innerHTML = `${weekLabel}Objetivo <strong>${menu.target_calories}</strong> kcal/dia`;
     return;
   }
-  summaryEl.textContent = "Menu generado para tu perfil.";
+  summaryEl.textContent = `${weekLabel}Menu generado para tu perfil.`;
 }
 
 function pulseNode(node) {
@@ -147,7 +328,7 @@ function pulseNode(node) {
   node.classList.add("pulse-on-action");
 }
 
-function buildAiInsight(profile, menu) {
+function buildAiInsight(profile, menu, dayName = "") {
   const goalMap = {
     lose_fat: "definir y perder grasa",
     maintain: "mantener tu composicion corporal",
@@ -170,18 +351,26 @@ function buildAiInsight(profile, menu) {
   const cookLevel = session.level === "low" ? "recetas faciles y directas" : session.level === "advanced" ? "recetas avanzadas con mayor variedad tecnica" : "recetas de dificultad media";
 
   const tips = [];
+  const rotatingWeekTips = [
+    "Semana nueva: prioriza hidratarte desde primera hora para mejorar energia y rendimiento.",
+    "Ajuste de progreso: revisa 2 comidas al dia para mantener variedad y adherencia.",
+    "Enfoque de consistencia: prepara 1 base de proteina y 1 guarnicion para ahorrar tiempo.",
+    "Semana de precision: organiza compra y cocinado en 2 bloques para reducir improvisacion.",
+  ];
+
   if (profile.meals_per_day >= 5) tips.push("Tu distribucion de comidas es alta: prioriza preparaciones simples y batch cooking.");
   if (profile.training_days >= 5) tips.push("Entrenas muchos dias: manten una comida post-entreno con buena proteina y carbohidrato.");
   if (profile.max_prep_minutes <= 25) tips.push("Tiempo ajustado: enfocate en recetas de 1 sarten o preparaciones en bloque.");
   if (profile.goal === "gain_muscle") tips.push("Para ganar musculo, prioriza consistencia calorica y proteina diaria.");
   if (profile.goal === "lose_fat") tips.push("Para perder grasa, mantendremos saciedad alta con fibra y proteina.");
   if (profile.dislikes?.length) tips.push(`Hemos evitado ingredientes que no te gustan: ${profile.dislikes.join(", ")}.`);
+  tips.push(rotatingWeekTips[menuState.currentWeekIndex % rotatingWeekTips.length]);
 
   return `
     <h3>Consejo IA para ${session.name}</h3>
     <p>
       Perfil detectado: ${actText}, objetivo de <strong>${goalText}</strong>, dieta <strong>${dietText}</strong> y preferencia por ${cookLevel}.
-      Tu objetivo calorico estimado es <strong>${menu.target_calories} kcal/dia</strong>.
+      Tu objetivo calorico estimado es <strong>${menu.target_calories} kcal/dia</strong>. ${dayName ? `Hoy estas viendo <strong>${dayName}</strong>.` : ""}
     </p>
     <ul>
       ${tips.slice(0, 4).map((tip) => `<li>${tip}</li>`).join("")}
@@ -190,10 +379,13 @@ function buildAiInsight(profile, menu) {
   `;
 }
 
-function showAiInsight(profile, menu) {
+function showAiInsight(profile, menu, dayName = "") {
   if (!aiInsightEl) return;
   aiInsightEl.classList.remove("hidden");
-  aiInsightEl.innerHTML = buildAiInsight(profile, menu);
+  aiInsightEl.classList.remove("insight-refresh");
+  aiInsightEl.innerHTML = buildAiInsight(profile, menu, dayName);
+  void aiInsightEl.offsetWidth;
+  aiInsightEl.classList.add("insight-refresh");
   pulseNode(aiInsightEl);
 }
 
@@ -256,10 +448,11 @@ function renderCurrentDay(animated = false) {
   const card = document.createElement("div");
   card.className = "day-card day-card-large";
 
-  for (const meal of day.meals) {
+  day.meals.forEach((meal, mealIndex) => {
     const recipe = meal.recipe;
     const btn = document.createElement("button");
     btn.className = "meal-btn meal-card-btn";
+    btn.style.setProperty("--meal-delay", `${mealIndex * 70}ms`);
 
     const mealTitle = normalizeMealType(meal.meal_type);
     const mealSubtitle =
@@ -279,10 +472,13 @@ function renderCurrentDay(animated = false) {
 
     btn.addEventListener("click", () => renderDetail(recipe));
     card.appendChild(btn);
-  }
+  });
 
   menuEl.innerHTML = "";
   menuEl.appendChild(card);
+  const dayLabel = normalizeDay(day.day);
+  const currentWeek = menuState.weeks[menuState.currentWeekIndex]?.menu || { target_calories: 0 };
+  showAiInsight(payload(), currentWeek, dayLabel);
 
   const first = day.meals?.[0]?.recipe;
   if (first) renderDetail(first);
@@ -295,19 +491,54 @@ function shiftDay(delta) {
   renderCurrentDay(true);
 }
 
-function renderMenu(menu) {
-  showSummary(menu);
-  menuState.week = menu.week;
+function loadWeek(index, animated = true) {
+  const clamped = Math.max(0, Math.min(index, menuState.weeks.length - 1));
+  const entry = menuState.weeks[clamped];
+  if (!entry) return;
+  menuState.currentWeekIndex = clamped;
+  menuState.activeWeekMeta = entry.meta || createWeekMeta(clamped);
+  menuState.week = entry.menu.week || [];
   menuState.currentDayIndex = 0;
-  showAiInsight(payload(), menu);
-  renderCurrentDay(false);
+  refreshWeekIndicator();
+  showSummary(entry.menu);
+  renderCurrentDay(animated);
+}
+
+function shiftWeek(delta) {
+  if (!menuState.weeks.length) return;
+  const len = menuState.weeks.length;
+  const nextIndex = (menuState.currentWeekIndex + delta + len) % len;
+  loadWeek(nextIndex, true);
+}
+
+function renderMenu(menu) {
+  const history = pushWeek(menu);
+  menuState.weeks = history;
+  loadWeek(history.length - 1, false);
 }
 
 prevDayBtn.addEventListener("click", () => shiftDay(-1));
 nextDayBtn.addEventListener("click", () => shiftDay(1));
+prevWeekBtn?.addEventListener("click", () => shiftWeek(-1));
+nextWeekBtn?.addEventListener("click", () => shiftWeek(1));
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  if (wizardState.enabled && wizardState.currentStep !== wizardState.labels.length - 1) {
+    statusEl.textContent = "Termina el onboarding antes de generar el menu.";
+    statusEl.style.color = "#ff9ab8";
+    pulseNode(statusEl);
+    return;
+  }
+
+  if (!validateProfilePayload(payload())) {
+    statusEl.textContent = "Revisa los datos del perfil antes de generar el menu.";
+    statusEl.style.color = "#ff9ab8";
+    pulseNode(statusEl);
+    return;
+  }
+
   statusEl.textContent = "Generando menu...";
   statusEl.style.color = "#8ed8ff";
 
@@ -334,11 +565,21 @@ form.addEventListener("submit", async (event) => {
 });
 
 prefillFromSavedUser();
+bindWizardEvents();
+form.addEventListener("input", updateGenerateButtonState);
+form.addEventListener("change", updateGenerateButtonState);
 
 const last = localStorage.getItem("fitmenu_last_week");
-if (last) {
+const history = getWeekHistory();
+if (history.length) {
+  menuState.weeks = history;
+  loadWeek(history.length - 1, false);
+} else if (last) {
   try {
-    renderMenu(JSON.parse(last));
+    const parsed = JSON.parse(last);
+    menuState.weeks = [{ meta: createWeekMeta(0), menu: parsed }];
+    setWeekHistory(menuState.weeks);
+    loadWeek(0, false);
   } catch {
     // ignore stale cache
   }

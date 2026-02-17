@@ -1,36 +1,21 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FitMenu AI | Cartas 3D</title>
-  <link rel="stylesheet" href="shared.css" />
+  <link rel="stylesheet" href="shared.css?v=6" />
 </head>
-<body>
+<body class="kitchen-app" data-scene="app">
   <canvas id="universe-bg"></canvas>
   <div class="page app-page">
-    <header class="topbar glass">
-      <div>
-        <h1>Cartas 3D de Recetas</h1>
-        <p class="muted">Elige una receta para ver preparacion completa</p>
-      </div>
-      <nav class="nav-links">
-        <button id="backBtn" class="ghost">Atras</button>
-        <a href="login.html">Login</a>
-        <a href="form.html">Formulario</a>
-        <a class="active" href="recipes.html">Cartas 3D</a>
-        <a href="recipe.html">Receta</a>
-        <button id="logoutBtn" class="ghost">Salir</button>
-      </nav>
-    </header>
-
+    <div id="topbarMount"></div>
     <main class="cards-page">
       <section id="cardsGrid" class="cards-grid"></section>
     </main>
   </div>
 
-  <script src="background.js"></script>
-  <script src="shared.js"></script>
-  <script src="recipes.js"></script>
+  <script type="module" src="background.js?v=8"></script>
+  <script type="module" src="js/pages/recipesPage.js?v=1"></script>
 </body>
 </html>

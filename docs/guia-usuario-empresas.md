@@ -53,6 +53,7 @@ El usuario puede:
 - registrarse si es su primera vez.
 
 El sistema guarda su información básica y su configuración de uso.
+Además, la pantalla de login tiene una estética visual temática de alimentación (animada), para reforzar branding y percepción premium.
 
 ### 2) Formulario inteligente
 Una vez dentro, el usuario completa su perfil:
@@ -70,8 +71,18 @@ Al enviar el formulario, la app muestra un resumen comprensible:
 - qué recomendaciones son más adecuadas,
 - por qué el menú propuesto encaja con su caso.
 
+Este bloque no es estático: se actualiza según el día y semana que el usuario esté explorando.
+
 ### 4) Menú semanal
 Se generan automáticamente comidas para los 7 días, ajustadas al perfil.
+
+### 4.1) Navegación por semanas (nuevo)
+El usuario puede generar varias semanas y navegar entre ellas:
+- semana anterior / semana siguiente,
+- indicador de semana activa,
+- historial local para comparar planes.
+
+Esto mejora la adherencia porque permite variedad real y evita repetición.
 
 ### 5) Recetas y detalle
 Cada comida permite abrir su receta con:
@@ -113,6 +124,10 @@ La solución se divide en 3 capas:
 - ✅ Catálogo ampliado de recetas (r1-r22).
 - ✅ Tarjetas 3D y animaciones visuales.
 - ✅ Recomendación IA de perfil tras el formulario.
+- ✅ Login visual food-theme (fondo animado de alimentos + microinteracciones).
+- ✅ Dashboard con historial de semanas y navegación semanal.
+- ✅ Consejo IA dinámico por semana y por día.
+- ✅ Animaciones de refresco y entrada escalonada de tarjetas de comidas.
 
 ## 🧠 Personalización real del menú
 La recomendación considera:
@@ -154,11 +169,16 @@ Aunque el documento es no técnico, este resumen ayuda a validar robustez:
 5. Mejora visual (fondo animado, tarjetas 3D, interacción).
 6. Autenticación completa con registro/login y token.
 7. Sincronización de perfil de usuario y autocompletado.
-8. Documentación comercial y técnica para presentación empresarial.
+8. Incorporación de login gastronómico premium (nueva identidad visual).
+9. Implementación de historial de semanas y navegación temporal del plan.
+10. Evolución del módulo de recomendaciones IA (contextual por día/semana).
+11. Documentación comercial y técnica para presentación empresarial.
 
 ## 🚀 Estado del desarrollo y próximos pasos
 ### Estado actual
 Proyecto en fase **MVP avanzado funcional**.
+
+Incluye autenticación, personalización nutricional real, experiencia visual moderna y sistema de evolución semanal del plan.
 
 ### Próximas mejoras prioritarias
 - Migración de persistencia de demo a base de datos productiva.

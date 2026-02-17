@@ -1,72 +1,54 @@
-﻿# GitHub Profile README (EN) - Premium Ready
+# GitHub Profile README (EN) - Clean Professional
 
-> Paste this into: `ViorelGilRuiz/ViorelGilRuiz` -> `README_EN.md`
+> Paste this into `ViorelGilRuiz/ViorelGilRuiz` -> `README_EN.md`
 
 ```md
-<h1 align="center">Hi, I'm Viorel Gil Ruiz</h1>
-<h3 align="center">Frontend Angular / Full-stack Junior-Mid | TypeScript | NestJS | FastAPI</h3>
+# Viorel Gil Ruiz
+### Angular Frontend | Microservices | Java | Python
 
-<p align="center">
-  <a href="./README.md">Version en Espanol</a>
-</p>
+[Version en Espanol](./README.md)
 
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=160&text=Viorel%20Gil%20Ruiz&fontAlign=50&fontAlignY=35&color=0:0b132b,100:1c4e80&fontColor=ffffff&desc=Building%20AI%20and%20Full-Stack%20Products&descAlignY=58" alt="header" />
-</p>
-
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=800&center=true&vCenter=true&width=900&lines=AI+Nutrition+Product+Builder;Frontend+Angular+%7C+Full-stack+Junior-Mid;Clean+architecture+and+Business-driven+development;Open+to+Work+for+high-impact+teams" alt="typing" />
-</p>
-
-<p align="center">
-  <img src="https://komarev.com/ghpvc/?username=ViorelGilRuiz&label=Profile%20views&color=0e75b6&style=flat" alt="profile views" />
-  <img src="https://img.shields.io/badge/Open%20to%20Work-YES-2ea44f?style=flat" alt="open-to-work" />
-  <img src="https://img.shields.io/badge/Focus-AI%20%2B%20Full--Stack-4c8bf5?style=flat" alt="focus" />
-  <img src="https://img.shields.io/badge/Location-Zaragoza-6f42c1?style=flat" alt="location" />
-</p>
+![Profile Views](https://komarev.com/ghpvc/?username=ViorelGilRuiz&label=Profile%20Views&color=1f6feb&style=flat)
+![Open to Work](https://img.shields.io/badge/Open%20to%20Work-YES-2ea44f?style=flat)
+![Angular](https://img.shields.io/badge/Angular-2%20years-dd0031?style=flat&logo=angular)
+![Microservices](https://img.shields.io/badge/Microservices-2%20years-2563eb?style=flat)
+![Location](https://img.shields.io/badge/Location-Zaragoza-6f42c1?style=flat)
 
 ---
 
-## :rocket: About me
-- I build digital products focused on business impact and user value.
-- I am building **FitMenu AI Studio**, an AI-powered nutrition platform.
-- I prioritize scalable architecture, maintainable code, and polished UX.
-- I enjoy working in product-driven teams with strong engineering culture.
+## Professional summary
+Software engineer focused on product delivery and user experience.
+I build full-stack solutions with Angular and Java/Python backend services, aligned with business outcomes.
 
-## :briefcase: Featured projects
-- **FitMenu AI Studio**
-  - AI-based nutrition planning product.
-  - Backend auth, persistent profiles, personalized menus, and 3D UX.
-  - Repo: https://github.com/ViorelGilRuiz/FitMenu
+## Highlighted experience
+- 2 years of Angular experience in business web applications.
+- 2 years of microservices and REST API experience.
+- Backend experience with Java and Python.
+- Strong focus on code quality, clean architecture, and maintainability.
 
-- **GestionDeEstadios**
-  - Full-stack management project with architecture focus.
-  - Repo: https://github.com/ViorelGilRuiz/GestionDeEstadios
+## Value I bring
+- Modern Angular frontend with strong UX and performance.
+- Scalable architecture for product growth.
+- Team collaboration, ownership, and initiative.
+- Structured delivery focused on measurable impact.
 
-- **GestionEscolar**
-  - End-to-end educational management software.
-  - Repo: https://github.com/ViorelGilRuiz/GestionEscolar
+## Featured project
+### FitMenu AI Studio
+AI-powered nutrition platform with:
+- login and user profile,
+- personalized recommendations,
+- dynamic weekly plans,
+- week-based dashboard navigation,
+- dynamic AI guidance by day and week.
 
-## :toolbox: Core stack
+Repo: https://github.com/ViorelGilRuiz/FitMenu
+
+## Tech stack
 <p>
-  <img src="https://skillicons.dev/icons?i=ts,js,angular,react,html,css,nodejs,nestjs,python,fastapi,java,spring,postgres,mysql,docker,git,github,vscode" />
+  <img src="https://skillicons.dev/icons?i=angular,ts,js,nodejs,nestjs,java,python,fastapi,spring,mysql,postgres,mongodb,docker,git,github" />
 </p>
 
-## :chart_with_upwards_trend: GitHub analytics
-<p align="center">
-  <img height="170" src="https://github-readme-stats.vercel.app/api?username=ViorelGilRuiz&show_icons=true&theme=tokyonight" />
-  <img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=ViorelGilRuiz&layout=compact&theme=tokyonight" />
-</p>
-
-<p align="center">
-  <img height="170" src="https://streak-stats.demolab.com?user=ViorelGilRuiz&theme=tokyonight&hide_border=true" />
-</p>
-
-<p align="center">
-  <img src="https://github-profile-trophy.vercel.app/?username=ViorelGilRuiz&theme=tokyonight&no-frame=true&row=1&column=6" alt="trophies" />
-</p>
-
-## :handshake: Connect with me
+## Contact
 <p>
   <a href="https://www.linkedin.com/in/viorel-gil-ruiz-alejos-65810a24b/" target="_blank">
     <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" />
@@ -75,11 +57,7 @@
     <img src="https://img.shields.io/badge/Email-333333?style=for-the-badge&logo=gmail&logoColor=white" />
   </a>
 </p>
-
----
-
-:bulb: *I love turning ideas into real products that create measurable value.*
 ```
 
-## Note
+## Notes
 - Replace `viorel.gil@example.com` with your real email.

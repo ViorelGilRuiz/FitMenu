@@ -1,0 +1,19 @@
+{
+  "name": "fitmenu-ai-platform",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev:api": "npm --workspace apps/api run start:dev",
+    "dev:web": "npm --workspace apps/web run start",
+    "build": "npm run build:api && npm run build:web",
+    "build:api": "npm --workspace apps/api run build",
+    "build:web": "npm --workspace apps/web run build",
+    "test": "npm run test:api && npm run test:web",
+    "test:api": "npm --workspace apps/api run test",
+    "test:web": "npm --workspace apps/web run test"
+  }
+}

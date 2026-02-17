@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitMenu AI | Menu semanal</title>
+  <link rel="stylesheet" href="shared.css?v=6" />
+</head>
+<body class="kitchen-app" data-scene="app">
+  <canvas id="universe-bg"></canvas>
+  <div class="page app-page">
+    <div id="topbarMount"></div>
+
+    <main class="content-grid menu-full-grid">
+      <section class="glass panel panel-menu">
+        <div class="panel-actions">
+          <h2>Menu semanal</h2>
+          <div class="panel-action-buttons">
+            <button id="editProfileBtn" class="ghost mini-btn" type="button">Editar perfil</button>
+            <button id="regenerateBtn" class="primary mini-btn" type="button">Generar nueva semana</button>
+          </div>
+        </div>
+
+        <div id="summary" class="summary"></div>
+        <div id="aiInsight" class="ai-insight"></div>
+
+        <div class="week-toolbar">
+          <button id="prevWeekBtn" class="ghost mini-btn" type="button">Semana anterior</button>
+          <div id="weekIndicator" class="week-indicator">Semana 1</div>
+          <button id="nextWeekBtn" class="ghost mini-btn" type="button">Semana siguiente</button>
+        </div>
+
+        <div class="menu-carousel-head">
+          <button id="prevDayBtn" class="ghost mini-btn" type="button">Anterior</button>
+          <div id="dayIndicator" class="day-indicator">Lunes</div>
+          <button id="nextDayBtn" class="ghost mini-btn" type="button">Siguiente</button>
+        </div>
+
+        <div id="menuList" class="day-viewport"></div>
+        <div id="dayDots" class="day-dots"></div>
+        <p id="menuStatus" class="muted"></p>
+      </section>
+
+      <section class="glass panel panel-detail">
+        <h2>Detalle receta</h2>
+        <div id="recipeDetail" class="scroll-area">Selecciona una comida para ver detalle.</div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="background.js?v=8"></script>
+  <script type="module" src="js/pages/menuPage.js?v=1"></script>
+</body>
+</html>
